@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FlexFule — Health Info</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="build/tailwind.css" />
+  <link rel="stylesheet" href="signup.css" />
+  <link rel="stylesheet" href="theme.css" />
+  <script defer src="prompt.js"></script>
+  <style>
+    [data-health-loading="true"] main {
+      opacity: 0;
+      pointer-events: none;
+    }
+  </style>
+  <script defer src="auth.js"></script>
+  <link rel="icon" href="images/flexfuel.png" />
+</head>
+<body class="auth-shell" data-health-loading="true">
+  <main class="page">
+    <a class="back-btn" href="signup.html" aria-label="Back to Personal Info">
+      <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M14.7 5.3a1 1 0 0 1 0 1.4L10.41 11H20a1 1 0 1 1 0 2h-9.59l4.3 4.3a1 1 0 0 1-1.42 1.4l-6-6a1 1 0 0 1 0-1.4l6-6a1 1 0 0 1 1.42 0Z"/></svg>
+    </a>
+
+    <div class="green-beam" aria-hidden="true"></div>
+
+    <header class="brand">
+      <div class="halo" aria-hidden="true"></div>
+      <div class="logo-disc">
+        <img src="images/logoBg.png" alt="FlexFule" />
+      </div>
+    </header>
+
+    <section class="content max-w-[1200px] mx-auto grid grid-cols-1 md:grid-cols-[1fr_380px] gap-6 md:gap-8 px-4 md:px-6">
+      <section class="signup-card">
+        <form class="form" action="#" method="post" novalidate>
+          <h2 class="title"><span>Health Information</span></h2>
+
+          <label class="field w-full">
+            <span class="icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M12 3a1 1 0 0 1 1 1v3h3a1 1 0 1 1 0 2h-3v3a1 1 0 1 1-2 0V9H8a1 1 0 1 1 0-2h3V4a1 1 0 0 1 1-1Z"/></svg>
+            </span>
+            <input id="height" class="w-full bg-transparent border border-white/60 rounded-xl px-3 py-3 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-accent/70 focus:border-accent/70" type="number" inputmode="decimal" min="0" step="0.1" placeholder="Enter Your Height in cm" required />
+            <span class="error-message" aria-live="polite"></span>
+          </label>
+
+          <label class="field w-full">
+            <span class="icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M7 4h10a2 2 0 0 1 2 2v12H5V6a2 2 0 0 1 2-2Zm0 4v2h10V8H7Z"/></svg>
+            </span>
+            <input id="weight" class="w-full bg-transparent border border-white/60 rounded-xl px-3 py-3 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-accent/70 focus:border-accent/70" type="number" inputmode="decimal" min="0" step="0.1" placeholder="Enter Your Weight in kg" required />
+            <span class="error-message" aria-live="polite"></span>
+          </label>
+
+          <label class="field w-full">
+            <span class="icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M12 2a10 10 0 1 0 10 10A10.012 10.012 0 0 0 12 2Zm0 4a1 1 0 0 1 1 1v4.382l3.447 3.447a1 1 0 0 1-1.414 1.414L11 12.414V7a1 1 0 0 1 1-1Z"/></svg>
+            </span>
+            <input id="bmi" class="w-full bg-transparent border border-white/60 rounded-xl px-3 py-3 text-white placeholder-white/70 opacity-90" type="text" placeholder="BMI (auto-calculated)" readonly />
+          </label>
+
+          <label class="field w-full">
+            <span class="icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M12 2a10 10 0 1 0 10 10A10.011 10.011 0 0 0 12 2Zm1 14-4-4 1.414-1.414L13 12.172l4.586-4.586L19 9Z"/></svg>
+            </span>
+            <select class="w-full bg-transparent border border-white/60 rounded-xl px-3 py-3 text-white focus:outline-none focus:ring-2 focus:ring-accent/70 focus:border-accent/70" id="goal">
+              <option value="" disabled selected>Select Your Goals</option>
+              <option>Lose Weight</option>
+              <option>Build Muscle</option>
+              <option>Improve Endurance</option>
+              <option>General Fitness</option>
+            </select>
+            <span class="error-message" aria-live="polite"></span>
+          </label>
+
+          <label class="field w-full">
+            <span class="icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M12 4a8 8 0 1 1-8 8 8.009 8.009 0 0 1 8-8Zm0 4a4 4 0 1 0 4 4 4 4 0 0 0-4-4Z"/></svg>
+            </span>
+            <input id="target" class="w-full bg-transparent border border-white/60 rounded-xl px-3 py-3 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-accent/70 focus:border-accent/70" type="number" inputmode="decimal" min="0" step="0.1" placeholder="Enter Your Target Weight" />
+            <span class="error-message" aria-live="polite"></span>
+          </label>
+        </form>
+      </section>
+
+      <aside class="aside grid gap-4 content-start justify-items-end md:justify-items-end">
+        <figure class="builder">
+          <img src="https://images.unsplash.com/photo-1556817411-31ae72fa3ea0?auto=format&amp;fit=crop&amp;w=1200&amp;q=80" alt="Athlete training with battle ropes" loading="lazy" />
+        </figure>
+        <a id="finishBtn" class="next-btn inline-block text-center px-6 py-3 rounded-xl font-extrabold text-white shadow-md" href="index.html">Finish &amp; Start Tracking</a>
+      </aside>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="supabase-browser.js"></script>
+  <script src="supabase-session.js"></script>
+  <script src="oauth-buttons.js"></script>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const healthFlow = (params.get('from') || '').toLowerCase();
+    const isLoginFlow = healthFlow === 'login';
+    let cachedProfile = null;
+    let cachedUser = null;
+    const IMPORTANT_PROFILE_KEYS = ['height_cm', 'weight_kg', 'goal'];
+    const form = document.querySelector('.form');
+    const height = document.getElementById('height');
+    const weight = document.getElementById('weight');
+    const goal = document.getElementById('goal');
+    const target = document.getElementById('target');
+    const bmi = document.getElementById('bmi');
+    const finishBtn = document.getElementById('finishBtn');
+    const showPromptAlert = (message, options = {}) => {
+      if (window.FFPrompt?.alert) {
+        return window.FFPrompt.showPromptAlert(message, options);
+      }
+      window.showPromptAlert(message);
+      return Promise.resolve();
+    };
+
+    function hasPositiveNumber(value) {
+      if (value === null || value === undefined || value === '') return false;
+      const num = Number(value);
+      return Number.isFinite(num) && num > 0;
+    }
+
+    function hasText(value) {
+      return typeof value === 'string' && value.trim().length > 0;
+    }
+
+    function hasHealthProfileData(profile) {
+      if (!profile) return false;
+      return IMPORTANT_PROFILE_KEYS.every((key) => {
+        const value = profile[key];
+        if (key === 'goal') return hasText(value);
+        return hasPositiveNumber(value);
+      });
+    }
+
+    function prefillHealthForm(profile) {
+      if (!profile) return;
+      if (typeof profile.height_cm !== 'undefined' && height) {
+        height.value = hasPositiveNumber(profile.height_cm) ? Number(profile.height_cm) : '';
+      }
+      if (typeof profile.weight_kg !== 'undefined' && weight) {
+        weight.value = hasPositiveNumber(profile.weight_kg) ? Number(profile.weight_kg) : '';
+      }
+      if (goal && hasText(profile.goal)) {
+        goal.value = profile.goal;
+      }
+      if (target) {
+        const rawTarget = profile.target_weight;
+        target.value = rawTarget === undefined || rawTarget === null ? '' : rawTarget;
+      }
+      computeBMI();
+    }
+
+    function applyLoginFlowState() {
+      if (finishBtn) {
+        finishBtn.textContent = 'Save & Continue';
+        finishBtn.setAttribute('href', '#');
+      }
+      prefillHealthForm(cachedProfile);
+    }
+
+    async function ensureStep1Data() {
+      let cached = window.FFAuth.loadStep1();
+      if (cached) return cached;
+      if (!window.supabaseClient) return null;
+      try {
+        const { data, error } = await window.supabaseClient.auth.getSession();
+        if (error || !data?.session?.user) return null;
+        const user = data.session.user;
+        const meta = user.user_metadata || {};
+        const name =
+          meta.full_name ||
+          meta.name ||
+          [meta.given_name, meta.family_name].filter(Boolean).join(' ').trim() ||
+          (user.email ? user.email.split('@')[0] : 'Athlete');
+        const randomPassword = Array.from(window.crypto.getRandomValues(new Uint8Array(18)))
+          .map((n) => (n % 36).toString(36))
+          .join('');
+        const record = {
+          name,
+          email: user.email || '',
+          age: '',
+          gender: '',
+          password: randomPassword
+        };
+        window.FFAuth.saveStep1(record);
+        return record;
+      } catch (err) {
+        console.warn('[Supabase] Unable to derive personal info from session', err);
+        return null;
+      }
+    }
+
+    (async () => {
+      await (window.FFSupa?.syncFromHash?.() ?? Promise.resolve());
+      let shouldReveal = true;
+
+      if (isLoginFlow) {
+        try {
+          const bootstrap = await (window.FFSupa?.bootstrapSessionFromSupabase?.(true) ?? Promise.resolve({ ok: false }));
+          if (bootstrap?.ok) {
+            try {
+              const meRes = await fetch('/api/me');
+              if (meRes?.ok) {
+                const payload = await meRes.json();
+                cachedUser = payload?.user || null;
+                cachedProfile = cachedUser?.profile || null;
+                const alreadyComplete = cachedUser?.needsHealthInfo === false && hasHealthProfileData(cachedProfile);
+                if (alreadyComplete) {
+                  shouldReveal = false;
+                  window.location.replace('dashboard.html');
+                  return;
+                }
+              }
+            } catch (err) {
+              console.warn('Unable to verify session after login', err);
+            }
+          } else if (bootstrap?.reason && bootstrap.reason !== 'missing-account') {
+            console.warn('[Supabase] OAuth bootstrap incomplete', bootstrap.reason);
+          }
+        } catch (err) {
+          console.warn('Failed to finalize login session', err);
+        }
+      }
+
+      try {
+        await ensureStep1Data();
+      } finally {
+        if (shouldReveal) {
+          document.body.dataset.healthLoading = 'false';
+          if (isLoginFlow) {
+            applyLoginFlowState();
+          }
+        }
+      }
+    })();
+
+    // Auto-calc BMI when height/weight change
+    function computeBMI() {
+      if (!height || !weight || !bmi) return;
+      const h = parseFloat(height.value);
+      const w = parseFloat(weight.value);
+      if (h > 0 && w > 0) {
+        const m = h / 100.0;
+        const v = w / (m * m);
+        bmi.value = Number.isFinite(v) ? v.toFixed(1) : '';
+      } else {
+        bmi.value = '';
+      }
+    }
+    height && height.addEventListener('input', computeBMI);
+    weight && weight.addEventListener('input', computeBMI);
+
+    // Finish registration: combine with step1 and store to localStorage
+    function clearFieldError(element) {
+      const container = element?.closest('.field');
+      if (!container) return;
+      container.classList.remove('error');
+      const message = container.querySelector('.error-message');
+      if (message) message.textContent = '';
+      element.removeAttribute('aria-invalid');
+    }
+
+    function showError(element, message) {
+      if (!element) return;
+      const container = element.closest('.field');
+      if (!container) return;
+      container.classList.add('error');
+      const slot = container.querySelector('.error-message');
+      if (slot) slot.textContent = message;
+      element.setAttribute('aria-invalid', 'true');
+    }
+
+    [height, weight, goal, target].forEach((el) => {
+      if (!el) return;
+      const evt = el.tagName === 'SELECT' ? 'change' : 'input';
+      el.addEventListener(evt, () => clearFieldError(el));
+    });
+
+    function validateForm() {
+      let isValid = true;
+      const heightValue = height?.value?.trim() ?? '';
+      const weightValue = weight?.value?.trim() ?? '';
+      const goalValue = goal?.value?.trim() ?? '';
+      const targetValue = target?.value?.trim() ?? '';
+
+      if (!heightValue) {
+        showError(height, 'Height is required');
+        isValid = false;
+      } else if (Number(heightValue) <= 0) {
+        showError(height, 'Enter a valid height');
+        isValid = false;
+      }
+
+      if (!weightValue) {
+        showError(weight, 'Weight is required');
+        isValid = false;
+      } else if (Number(weightValue) <= 0) {
+        showError(weight, 'Enter a valid weight');
+        isValid = false;
+      }
+
+      if (!goalValue) {
+        showError(goal, 'Please select a goal');
+        isValid = false;
+      }
+
+      if (targetValue && Number(targetValue) <= 0) {
+        showError(target, 'Enter a valid target weight');
+        isValid = false;
+      }
+
+      if (!isValid) {
+        const firstInvalid = form?.querySelector('.field.error input, .field.error select');
+        firstInvalid?.focus();
+      }
+      return isValid;
+    }
+
+    finishBtn?.addEventListener('click', async (event) => {
+      event.preventDefault();
+      await (window.FFSupa?.syncFromHash?.() ?? Promise.resolve());
+
+      if (!validateForm()) {
+        return;
+      }
+
+      if (isLoginFlow) {
+        const updatePayload = {
+          height_cm: height?.value?.trim() ?? '',
+          weight_kg: weight?.value?.trim() ?? '',
+          goal: goal?.value?.trim() ?? '',
+          target_weight: target?.value?.trim() ?? ''
+        };
+
+        if (cachedProfile && cachedProfile.age !== undefined && cachedProfile.age !== null) {
+          updatePayload.age = cachedProfile.age;
+        }
+        if (cachedProfile && cachedProfile.preference !== undefined && cachedProfile.preference !== null) {
+          updatePayload.preference = cachedProfile.preference;
+        }
+        if (cachedProfile && cachedProfile.allergies !== undefined && cachedProfile.allergies !== null) {
+          updatePayload.allergies = cachedProfile.allergies;
+        }
+
+        const res = await fetch('/api/profile', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(updatePayload)
+        });
+
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({ error: 'Failed to save health information' }));
+          showPromptAlert(data.error || 'Failed to save health information');
+          return;
+        }
+
+        window.location.href = 'dashboard.html';
+        return;
+      }
+
+      let step1 = window.FFAuth.loadStep1();
+      if (!step1) {
+        step1 = await ensureStep1Data();
+      }
+      if (!step1) {
+        showPromptAlert('Personal info missing. Please complete previous step.');
+        return;
+      }
+
+      const body = {
+        name: step1.name,
+        email: step1.email,
+        age: step1.age,
+        gender: step1.gender,
+        password: step1.password,
+        height_cm: height?.value?.trim() ?? '',
+        weight_kg: weight?.value?.trim() ?? '',
+        goal: goal?.value?.trim() ?? '',
+        target_weight: target?.value?.trim() ?? ''
+      };
+      const res = await fetch('/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({ error: 'Registration failed' }));
+        showPromptAlert(data.error || 'Registration failed');
+        return;
+      }
+      window.FFAuth.clearStep1();
+      window.location.href = 'dashboard.html';
+    });
+  </script>
+</body>
+</html>

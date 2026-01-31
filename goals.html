@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FlexFule — Goals & Progress</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="dashboard.css" />
+  <link rel="stylesheet" href="goals.css" />
+  <link rel="stylesheet" href="theme.css" />
+  <script defer src="prompt.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="supabase-browser.js"></script>
+  <script src="supabase-session.js"></script>
+  <script defer src="plan-engine.js"></script>
+  <script defer src="streakTracker.js"></script>
+  <script defer src="goals.js"></script>
+</head>
+
+<body class="app-shell">
+  <aside class="sidebar" aria-label="Primary">
+    <button class="sidebar-close" aria-label="Close sidebar">&#10005;</button>
+    <span class="header">
+      <img src="images/flexfuel.png" alt="FlexFule logo" />
+      <h3>FlexFule</h3>
+    </span>
+    <nav class="sidebar-nav">
+      <a class="property" href="dashboard.html" data-icon-default="images/menu.png"
+        data-icon-active="images/menu (2).png">
+        <img src="images/menu.png" alt="Dashboard" />
+        <span class="label">Dashboard</span>
+      </a>
+      <a class="property" href="index.html" data-icon-default="images/run.png" data-icon-active="images/run (2).png">
+        <img src="images/run.png" alt="Workout" />
+        <span class="label">Workout</span>
+      </a>
+      <a class="property" href="meals.html" data-icon-default="images/lunch (2).png" data-icon-active="images/lunch (3).png">
+        <img src="images/lunch (2).png" alt="Meals" />
+        <span class="label">Meals</span>
+      </a>
+      <a class="property" href="goals.html" aria-current="page" data-icon-default="images/flag (1).png"
+        data-icon-active="images/flag (2).png">
+        <img src="images/flag (2).png" alt="Goals" />
+        <span class="label active">Goals</span>
+      </a>
+      <a class="property" href="profile.html" data-icon-default="images/user.png" data-icon-active="images/user (1).png">
+        <img src="images/user.png" alt="Profile" />
+        <span class="label">Profile</span>
+      </a>
+      <a class="property" href="#settings">
+        <img src="images/settings (2).png" alt="Settings" />
+        <span class="label">Settings</span>
+      </a>
+      <button class="property logout" id="logoutBtn" type="button">
+        <img src="images/logout.png" alt="Logout" />
+        <span class="label">Logout</span>
+      </button>
+    </nav>
+  </aside>
+
+  <div class="hamburger-menu" aria-label="Toggle sidebar" role="button" tabindex="0" aria-expanded="true">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+
+  <div class="sections">
+    <script>
+      (function () {
+        try {
+          var saved = localStorage.getItem('flexfule-sidebar-state');
+          if (saved === 'collapsed') {
+            var sidebarEl = document.querySelector('.sidebar');
+            var sectionsEl = document.querySelector('.sections');
+            var hamburgerEl = document.querySelector('.hamburger-menu');
+            if (sidebarEl) sidebarEl.classList.add('collapsed');
+            if (sectionsEl) sectionsEl.classList.add('collapsed');
+            if (hamburgerEl) {
+              hamburgerEl.classList.add('active');
+              hamburgerEl.setAttribute('aria-expanded', 'false');
+            }
+            document.body.classList.add('sidebar-collapsed');
+          }
+        } catch (err) {
+          console.warn('Failed to apply saved sidebar state', err);
+        }
+      })();
+    </script>
+    <div class="theme-toggle" aria-label="Toggle dark mode" role="button" tabindex="0" aria-pressed="false">
+      <img src="images/icons/sun.svg" alt="Light mode" class="sun-icon" />
+      <img src="images/icons/moon.svg" alt="Dark mode" class="moon-icon" />
+      <div class="toggle-slider"></div>
+    </div>
+
+    <main class="main-content">
+      <header class="topbar">
+        <h1 class="page-title">Goals</h1>
+        <div class="topbar-right">
+          <button class="primary-btn add-goal-btn" id="addGoalBtn" type="button">Add New Goal</button>
+          <div class="user-meta" id="userMeta">
+            <img id="userAvatar" src="images/user.png" alt="User avatar" loading="lazy" data-avatar-placeholder="images/user.png" />
+            <div>
+              <span class="user-name" id="userName">FlexFule Member</span>
+              <span class="user-goal" id="userGoal">Goal: Stay consistent</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <p class="page-subtitle">Customize your goals and connect every system from training to nutrition.</p>
+
+      <section class="goals-layout">
+        <article class="goal-card body-composition">
+          <header class="card-header">
+            <div>
+              <h2>Body Composition</h2>
+              <p class="card-subtitle">Weight trend synced to your target focus.</p>
+            </div>
+            <button class="primary-btn" id="logWeightBtn" type="button">Log Current Weight</button>
+          </header>
+          <div class="composition-chart">
+            <canvas id="bodyCompositionChart" width="640" height="240"></canvas>
+          </div>
+          <div class="composition-meta">
+            <div class="composition-stat">
+              <span class="stat-label">Starting</span>
+              <span class="stat-value" id="startWeight">--</span>
+            </div>
+            <div class="composition-stat">
+              <span class="stat-label">Current</span>
+              <span class="stat-value" id="currentWeight">--</span>
+            </div>
+            <div class="composition-stat">
+              <span class="stat-label">Target</span>
+              <span class="stat-value" id="targetWeight">--</span>
+            </div>
+            <div class="composition-date">
+              Projected Date: <span id="projectedDate">--</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="goal-card body-measurements">
+          <header class="card-header">
+            <div>
+              <h2>Body Measurements</h2>
+              <p class="card-subtitle">Latest check-in compared to the last entry.</p>
+            </div>
+            <button class="ghost-btn" id="updateMeasurementsBtn" type="button">Update Measurements</button>
+          </header>
+          <div class="measurements-list" id="measurementsList"></div>
+        </article>
+
+        <article class="goal-card performance-milestones">
+          <header class="card-header">
+            <div>
+              <h2>Performance Milestones</h2>
+              <p class="card-subtitle">Strength and conditioning targets.</p>
+            </div>
+            <div class="card-actions">
+              <button class="ghost-btn" id="editGoalsBtn" type="button">Edit</button>
+              <button class="ghost-btn" id="addStrengthBtn" type="button">Log PR</button>
+            </div>
+          </header>
+          <p class="empty-state" id="milestoneEmpty">No PRs logged yet. Log your first PR to see milestones.</p>
+          <div class="milestone-list" id="milestoneList" hidden>
+            <div class="milestone-row" data-milestone="bench">
+              <div class="milestone-head">
+                <span class="milestone-title">Bench Press 1RM</span>
+                <span class="milestone-stats">Target: <span id="benchTarget">--</span>, Current: <span id="benchCurrent">--</span></span>
+              </div>
+              <div class="milestone-bar">
+                <span class="milestone-fill" id="benchProgress"></span>
+              </div>
+            </div>
+            <div class="milestone-row" data-milestone="run">
+              <div class="milestone-head">
+                <span class="milestone-title">Run 5K</span>
+                <span class="milestone-stats">Target: <span id="runTarget">--</span>, Best: <span id="runBest">--</span></span>
+              </div>
+              <div class="milestone-bar">
+                <span class="milestone-fill" id="runProgress"></span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="goal-card habit-builder">
+          <header class="card-header">
+            <div>
+              <h2>Weekly Habit Builder</h2>
+              <p class="card-subtitle">Stay consistent across your full system.</p>
+            </div>
+            <button class="ghost-btn" id="openCheckinBtn" type="button">Daily Check-in</button>
+          </header>
+          <div class="habits-grid">
+            <button class="habit-tile" data-habit="protein" type="button">
+              <span class="habit-ring"><span class="habit-ring-core"></span></span>
+              <span class="habit-title">Hit Protein Goal</span>
+              <span class="habit-count" data-habit-count>0/7</span>
+            </button>
+            <button class="habit-tile" data-habit="sleep" type="button">
+              <span class="habit-ring"><span class="habit-ring-core"></span></span>
+              <span class="habit-title">8 Hours Sleep</span>
+              <span class="habit-count" data-habit-count>0/7</span>
+            </button>
+            <button class="habit-tile" data-habit="nosugar" type="button">
+              <span class="habit-ring"><span class="habit-ring-core"></span></span>
+              <span class="habit-title">No Sugar</span>
+              <span class="habit-count" data-habit-count>0/7</span>
+            </button>
+            <button class="habit-tile" data-habit="water" type="button">
+              <span class="habit-ring"><span class="habit-ring-core"></span></span>
+              <span class="habit-title">Hydration Goal</span>
+              <span class="habit-count" data-habit-count>0/7</span>
+            </button>
+          </div>
+          <p class="habit-footnote" id="habitFootnote">Meals and workouts sync here automatically.</p>
+        </article>
+
+        <article class="goal-card system-calendar">
+          <header class="card-header">
+            <div>
+              <h2>Consistency Calendar</h2>
+              <p class="card-subtitle">See which days hit harder across the full system.</p>
+            </div>
+            <div class="calendar-controls">
+              <button class="calendar-nav" id="calendarPrev" type="button">&lsaquo;</button>
+              <span class="calendar-month" id="calendarMonth">--</span>
+              <button class="calendar-nav" id="calendarNext" type="button">&rsaquo;</button>
+            </div>
+          </header>
+          <div class="calendar-legend">
+            <span class="legend-item"><span class="legend-dot hit-low"></span> Lower</span>
+            <span class="legend-item"><span class="legend-dot hit-mid"></span> Solid</span>
+            <span class="legend-item"><span class="legend-dot hit-high"></span> Hit Harder</span>
+          </div>
+          <div class="calendar-grid" id="consistencyCalendar"></div>
+        </article>
+
+        <article class="goal-card photo-journal">
+          <header class="card-header">
+            <div>
+              <h2>Photo Journal</h2>
+              <p class="card-subtitle">Upload check-ins, compare progress, and analyze change.</p>
+            </div>
+            <button class="ghost-btn" id="openPhotoUploadBtn" type="button">Upload Photo</button>
+          </header>
+          <div class="photo-journal-grid">
+            <div class="photo-journal-panel photo-upload-panel">
+              <div class="photo-panel-head">
+                <h3>New check-in</h3>
+                <p>Drop a front, side, or back photo to build your timeline.</p>
+              </div>
+              <form class="photo-upload-form" id="photoUploadForm">
+                <label class="photo-dropzone" id="photoDropzone" for="photoFileInput">
+                  <input id="photoFileInput" type="file" accept="image/jpeg,image/png,image/webp,image/heic,image/heif" />
+                  <span class="drop-title">Drop image or click to upload</span>
+                  <span class="drop-subtitle">JPG/PNG/WEBP/HEIC up to 4MB</span>
+                </label>
+                <div class="photo-form-row">
+                  <div class="form-group">
+                    <label for="photoDateInput">Date</label>
+                    <input type="date" id="photoDateInput" required />
+                  </div>
+                  <div class="form-group">
+                    <label for="photoViewInput">View</label>
+                    <select id="photoViewInput">
+                      <option value="Front">Front</option>
+                      <option value="Side">Side</option>
+                      <option value="Back">Back</option>
+                      <option value="Posed">Posed</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="photoNotesInput">Notes (optional)</label>
+                  <input type="text" id="photoNotesInput" placeholder="How did this check-in feel?" />
+                </div>
+                <div class="photo-preview" id="photoPreview">
+                  <img id="photoPreviewImage" src="" alt="Photo preview" loading="lazy" />
+                  <span class="photo-preview-label" id="photoPreviewLabel">No image selected yet.</span>
+                </div>
+                <button class="primary-btn" type="submit">Add to journal</button>
+              </form>
+            </div>
+            <div class="photo-journal-panel photo-compare-panel">
+              <div class="photo-panel-head">
+                <h3>Compare & analyze</h3>
+                <p>Slide to compare and review the change over time.</p>
+              </div>
+              <div class="photo-compare-controls">
+                <div class="photo-drop-target" id="photoBeforeDrop" data-drop-role="before">
+                  <span class="drop-label">Before</span>
+                  <div class="drop-thumb">
+                    <img id="photoBeforeThumb" src="" alt="Before photo" loading="lazy" />
+                  </div>
+                  <span class="drop-meta" id="photoBeforeMeta">Drag a photo here</span>
+                </div>
+                <div class="photo-drop-target" id="photoAfterDrop" data-drop-role="after">
+                  <span class="drop-label">After</span>
+                  <div class="drop-thumb">
+                    <img id="photoAfterThumb" src="" alt="After photo" loading="lazy" />
+                  </div>
+                  <span class="drop-meta" id="photoAfterMeta">Drag a photo here</span>
+                </div>
+                <div class="photo-compare-actions">
+                  <button class="ghost-btn" id="swapPhotoBtn" type="button">Swap</button>
+                </div>
+                <div class="photo-select is-hidden" aria-hidden="true">
+                  <label for="photoBeforeSelect">Before</label>
+                  <select id="photoBeforeSelect" tabindex="-1"></select>
+                </div>
+                <div class="photo-select is-hidden" aria-hidden="true">
+                  <label for="photoAfterSelect">After</label>
+                  <select id="photoAfterSelect" tabindex="-1"></select>
+                </div>
+              </div>
+              <div class="photo-compare" id="photoCompare" data-before="" data-after="">
+                <div class="photo-layer photo-after"></div>
+                <div class="photo-layer photo-before"></div>
+                <div class="photo-handle"></div>
+                <input class="photo-slider" type="range" min="0" max="100" value="55" aria-label="Photo comparison slider" />
+              </div>
+              <div class="photo-analysis" id="photoAnalysis">
+                <div class="analysis-item">
+                  <span class="analysis-label">Days between</span>
+                  <span class="analysis-value" id="analysisDays">--</span>
+                </div>
+                <div class="analysis-item">
+                  <span class="analysis-label">Weight change</span>
+                  <span class="analysis-value" id="analysisWeight">--</span>
+                </div>
+                <div class="analysis-item">
+                  <span class="analysis-label">Weekly pace</span>
+                  <span class="analysis-value" id="analysisRate">--</span>
+                </div>
+                <div class="analysis-item">
+                  <span class="analysis-label">Views</span>
+                  <span class="analysis-value" id="analysisViews">--</span>
+                </div>
+                <p class="analysis-notes" id="analysisNotes">Select two check-ins to see your change summary.</p>
+              </div>
+            </div>
+          </div>
+          <div class="photo-strip" id="photoStrip"></div>
+        </article>
+
+
+        <article class="goal-card review-card">
+          <p class="review-quote">Consistency is key. Keep going.</p>
+          <a class="primary-btn" href="dashboard.html">Review Monthly Progress</a>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <!-- Goal Builder Modal -->
+  <div class="modal-overlay" id="goalSetupModal">
+    <div class="modal">
+      <button class="modal-close" id="goalSetupClose">&times;</button>
+      <h2>Goal Builder</h2>
+      <form id="goalSetupForm">
+        <div class="form-group">
+          <label>Goal Focus</label>
+          <input type="text" id="goalFocusInput" placeholder="e.g. Lean down for spring season" />
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Target Weight (kg)</label>
+            <input type="number" id="goalTargetWeightInput" step="0.1" min="0" />
+          </div>
+          <div class="form-group">
+            <label>Bench Press Target (kg)</label>
+            <input type="number" id="benchTargetInput" step="0.5" min="0" />
+          </div>
+          <div class="form-group">
+            <label>Run 5K Target (min)</label>
+            <input type="number" id="runTargetInput" step="0.1" min="0" />
+          </div>
+          <div class="form-group">
+            <label>Best 5K Time (min)</label>
+            <input type="number" id="runBestInput" step="0.1" min="0" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Daily Calories (kcal)</label>
+            <input type="number" id="goalCaloriesInput" step="50" min="0" />
+          </div>
+          <div class="form-group">
+            <label>Protein (g)</label>
+            <input type="number" id="goalProteinInput" step="1" min="0" />
+          </div>
+          <div class="form-group">
+            <label>Carbs (g)</label>
+            <input type="number" id="goalCarbsInput" step="1" min="0" />
+          </div>
+          <div class="form-group">
+            <label>Fat (g)</label>
+            <input type="number" id="goalFatInput" step="1" min="0" />
+          </div>
+        </div>
+        <button type="submit" class="submit-btn">Save Goal</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Weight Log Modal -->
+  <div class="modal-overlay" id="weightModal">
+    <div class="modal">
+      <button class="modal-close" id="weightModalClose">&times;</button>
+      <h2>Log Current Weight</h2>
+      <form id="weightForm">
+        <div class="form-group">
+          <label>Current Weight (kg)</label>
+          <input type="number" id="currentWeightInput" step="0.1" min="0" required placeholder="e.g. 78.5" />
+        </div>
+        <button type="submit" class="submit-btn">Save Weight</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Body Measurement Modal -->
+  <div class="modal-overlay" id="measurementModal">
+    <div class="modal">
+      <button class="modal-close" id="measurementModalClose">&times;</button>
+      <h2>Add Body Measurement</h2>
+      <form id="measurementForm">
+        <div class="form-group">
+          <label>Date</label>
+          <input type="date" id="measurementDate" required />
+        </div>
+        <div class="form-group">
+          <label>Chest (cm)</label>
+          <input type="number" id="chestCm" step="0.1" min="0" placeholder="e.g. 98" />
+        </div>
+        <div class="form-group">
+          <label>Arms (cm)</label>
+          <input type="number" id="armsCm" step="0.1" min="0" placeholder="e.g. 36" />
+        </div>
+        <div class="form-group">
+          <label>Waist (cm)</label>
+          <input type="number" id="waistCm" step="0.1" min="0" placeholder="e.g. 80" />
+        </div>
+        <div class="form-group">
+          <label>Hips (cm)</label>
+          <input type="number" id="hipsCm" step="0.1" min="0" />
+        </div>
+        <div class="form-group">
+          <label>Thighs (cm)</label>
+          <input type="number" id="thighsCm" step="0.1" min="0" />
+        </div>
+        <div class="form-group">
+          <label>Neck (cm)</label>
+          <input type="number" id="neckCm" step="0.1" min="0" />
+        </div>
+        <button type="submit" class="submit-btn">Save Measurement</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Strength Record Modal -->
+  <div class="modal-overlay" id="strengthModal">
+    <div class="modal">
+      <button class="modal-close" id="strengthModalClose">&times;</button>
+      <h2>Add Strength Record</h2>
+      <form id="strengthForm">
+        <div class="form-group">
+          <label>Exercise</label>
+          <select id="exerciseName" required>
+            <option value="">Select Exercise</option>
+            <option value="Bench Press">Bench Press</option>
+            <option value="Squat">Squat</option>
+            <option value="Deadlift">Deadlift</option>
+            <option value="Overhead Press">Overhead Press</option>
+            <option value="Barbell Row">Barbell Row</option>
+            <option value="Other">Other</option>
+          </select>
+          <input type="text" id="exerciseNameOther" placeholder="Enter exercise name" style="display: none; margin-top: 8px;" />
+        </div>
+        <div class="form-group">
+          <label>Weight (kg)</label>
+          <input type="number" id="weightKg" step="0.1" min="0" required placeholder="e.g. 85" />
+        </div>
+        <div class="form-group">
+          <label>Reps</label>
+          <input type="number" id="reps" min="1" placeholder="e.g. 5" />
+        </div>
+        <div class="form-group">
+          <label>Sets</label>
+          <input type="number" id="sets" min="1" placeholder="e.g. 3" />
+        </div>
+        <div class="form-group">
+          <label>Date</label>
+          <input type="date" id="strengthDate" required />
+        </div>
+        <div class="form-group">
+          <label>Notes (optional)</label>
+          <textarea id="strengthNotes" rows="3" placeholder="Any additional notes..."></textarea>
+        </div>
+        <button type="submit" class="submit-btn">Save Record</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Daily Check-in Modal -->
+  <div class="modal-overlay" id="checkinModal">
+    <div class="modal">
+      <button class="modal-close" id="checkinModalClose">&times;</button>
+      <h2>Daily Check-in</h2>
+      <form id="checkinForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Water Intake (ml)</label>
+            <input type="number" id="checkinWater" step="50" min="0" placeholder="e.g. 1500" />
+          </div>
+          <div class="form-group">
+            <label>Sleep Hours</label>
+            <input type="number" id="checkinSleep" step="0.1" min="0" max="24" placeholder="e.g. 7.5" />
+          </div>
+          <div class="form-group">
+            <label>Had Added Sugar?</label>
+            <div class="toggle-group" role="group" aria-label="Sugar intake">
+              <button class="toggle-btn" type="button" data-toggle="sugar" data-value="no">No</button>
+              <button class="toggle-btn" type="button" data-toggle="sugar" data-value="yes">Yes</button>
+            </div>
+          </div>
+        </div>
+        <button type="submit" class="submit-btn">Save Check-in</button>
+      </form>
+    </div>
+  </div>
+
+</body>
+
+</html>

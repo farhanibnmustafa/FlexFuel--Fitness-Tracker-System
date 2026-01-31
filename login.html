@@ -1,0 +1,688 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FlexFule — Login</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="login.css" />
+    <link rel="stylesheet" href="theme.css" />
+    <script defer src="prompt.js"></script>
+    <script defer src="auth.js"></script>
+  </head>
+  <body class="auth-shell">
+    <main class="page">
+      <a class="back-btn" href="welcome.html" aria-label="Back to Welcome">
+        <svg
+          class="icon"
+          viewBox="0 0 24 24"
+          width="18"
+          height="18"
+          fill="currentColor"
+          aria-hidden="true"
+        >
+          <path
+            d="M14.7 5.3a1 1 0 0 1 0 1.4L10.41 11H20a1 1 0 1 1 0 2h-9.59l4.3 4.3a1 1 0 0 1-1.42 1.4l-6-6a1 1 0 0 1 0-1.4l6-6a1 1 0 0 1 1.42 0Z"
+          />
+        </svg>
+        <!-- <span class="label">Back</span> -->
+      </a>
+      <div class="green-beam" aria-hidden="true"></div>
+
+      <section class="login-stage">
+        <header class="brand">
+          <div class="halo" aria-hidden="true"></div>
+          <div class="logo-disc">
+            <img src="images/logoBg.png" alt="FlexFule" />
+          </div>
+        </header>
+        <figure class="login-figure">
+          <img
+            src="images/athlete-lift.jpg"
+            alt="Focused athlete curling a dumbbell"
+            loading="lazy"
+          />
+        </figure>
+
+        <span class="floaty-bubble"></span>
+        <span class="floaty-bubble is-secondary"></span>
+        <section class="login-card" data-tilt="true">
+        <div class="particle-layer">
+          <span
+            class="particle"
+            style="
+              --tx: -39px;
+              left: 27.25%;
+              bottom: -45px;
+              animation-delay: 1.86s;
+              --duration: 11.97s;
+              width: 7.51px;
+              height: 7.51px;
+              background: radial-gradient(
+                circle,
+                rgba(128, 101, 255, 0.42),
+                transparent 65%
+              );
+            "
+          ></span>
+          <span
+            class="particle"
+            style="
+              --tx: -88px;
+              left: 55.56%;
+              bottom: -45px;
+              animation-delay: 0.17s;
+              --duration: 11.71s;
+              width: 7.84px;
+              height: 7.84px;
+              background: radial-gradient(
+                circle,
+                rgba(128, 101, 255, 0.56),
+                transparent 65%
+              );
+            "
+          ></span>
+          <span
+            class="particle"
+            style="
+              --tx: -52px;
+              left: 24.13%;
+              bottom: -45px;
+              animation-delay: 7.57s;
+              --duration: 11.96s;
+              width: 8.76px;
+              height: 8.76px;
+              background: radial-gradient(
+                circle,
+                rgba(128, 101, 255, 0.35),
+                transparent 65%
+              );
+            "
+          ></span>
+          <span
+            class="particle"
+            style="
+              --tx: 92px;
+              left: 4.16%;
+              bottom: -45px;
+              animation-delay: 5.39s;
+              --duration: 10.45s;
+              width: 7.93px;
+              height: 7.93px;
+              background: radial-gradient(
+                circle,
+                rgba(128, 101, 255, 0.41),
+                transparent 65%
+              );
+            "
+          ></span>
+          <span
+            class="particle"
+            style="
+              --tx: -105px;
+              left: 38.13%;
+              bottom: -45px;
+              animation-delay: 1.08s;
+              --duration: 10.58s;
+              width: 8.6px;
+              height: 8.6px;
+              background: radial-gradient(
+                circle,
+                rgba(128, 101, 255, 0.32),
+                transparent 65%
+              );
+            "
+          ></span>
+          <span
+            class="particle"
+            style="
+              --tx: 104px;
+              left: 25.58%;
+              bottom: -45px;
+              animation-delay: 6.24s;
+              --duration: 6.81s;
+              width: 6.31px;
+              height: 6.31px;
+              background: radial-gradient(
+                circle,
+                rgba(128, 101, 255, 0.39),
+                transparent 65%
+              );
+            "
+          ></span>
+          <span
+            class="particle"
+            style="
+              --tx: 158px;
+              left: 107.43%;
+              bottom: -45px;
+              animation-delay: 2.74s;
+              --duration: 11.52s;
+              width: 6.73px;
+              height: 6.73px;
+              background: radial-gradient(
+                circle,
+                rgba(128, 101, 255, 0.27),
+                transparent 65%
+              );
+            "
+          ></span>
+          <span
+            class="particle"
+            style="
+              --tx: -53px;
+              left: 101.28%;
+              bottom: -45px;
+              animation-delay: 1.82s;
+              --duration: 9.58s;
+              width: 7.73px;
+              height: 7.73px;
+              background: radial-gradient(
+                circle,
+                rgba(128, 101, 255, 0.3),
+                transparent 65%
+              );
+            "
+          ></span>
+          <span
+            class="particle"
+            style="
+              --tx: -123px;
+              left: 62.75%;
+              bottom: -45px;
+              animation-delay: 0.11s;
+              --duration: 10.69s;
+              width: 7.63px;
+              height: 7.63px;
+              background: radial-gradient(
+                circle,
+                rgba(128, 101, 255, 0.5),
+                transparent 65%
+              );
+            "
+          ></span>
+          <span
+            class="particle"
+            style="
+              --tx: -63px;
+              left: -9.14%;
+              bottom: -45px;
+              animation-delay: 4.42s;
+              --duration: 9.98s;
+              width: 4.76px;
+              height: 4.76px;
+              background: radial-gradient(
+                circle,
+                rgba(128, 101, 255, 0.25),
+                transparent 65%
+              );
+            "
+          ></span>
+          <span
+            class="particle"
+            style="
+              --tx: -72px;
+              left: -5.95%;
+              bottom: -45px;
+              animation-delay: 6.69s;
+              --duration: 11.87s;
+              width: 4.12px;
+              height: 4.12px;
+              background: radial-gradient(
+                circle,
+                rgba(128, 101, 255, 0.5),
+                transparent 65%
+              );
+            "
+          ></span>
+          <span
+            class="particle"
+            style="
+              --tx: -7px;
+              left: 82.63%;
+              bottom: -45px;
+              animation-delay: 6.79s;
+              --duration: 11.68s;
+              width: 7.02px;
+              height: 7.02px;
+              background: radial-gradient(
+                circle,
+                rgba(128, 101, 255, 0.47),
+                transparent 65%
+              );
+            "
+          ></span>
+          <span
+            class="particle"
+            style="
+              --tx: 70px;
+              left: 11.77%;
+              bottom: -45px;
+              animation-delay: 0.58s;
+              --duration: 8.61s;
+              width: 5.42px;
+              height: 5.42px;
+              background: radial-gradient(
+                circle,
+                rgba(128, 101, 255, 0.5),
+                transparent 65%
+              );
+            "
+          ></span>
+          <span
+            class="particle"
+            style="
+              --tx: -27px;
+              left: 20.17%;
+              bottom: -45px;
+              animation-delay: 0.77s;
+              --duration: 10.72s;
+              width: 6.16px;
+              height: 6.16px;
+              background: radial-gradient(
+                circle,
+                rgba(128, 101, 255, 0.44),
+                transparent 65%
+              );
+            "
+          ></span>
+          <span
+            class="particle"
+            style="
+              --tx: 39px;
+              left: 63.12%;
+              bottom: -45px;
+              animation-delay: 5.03s;
+              --duration: 10.68s;
+              width: 8.45px;
+              height: 8.45px;
+              background: radial-gradient(
+                circle,
+                rgba(128, 101, 255, 0.29),
+                transparent 65%
+              );
+            "
+          ></span>
+          <span
+            class="particle"
+            style="
+              --tx: -154px;
+              left: 29.08%;
+              bottom: -45px;
+              animation-delay: 4.1s;
+              --duration: 11.54s;
+              width: 8.18px;
+              height: 8.18px;
+              background: radial-gradient(
+                circle,
+                rgba(128, 101, 255, 0.27),
+                transparent 65%
+              );
+            "
+          ></span>
+          <span
+            class="particle"
+            style="
+              --tx: -17px;
+              left: 59.67%;
+              bottom: -45px;
+              animation-delay: 2.26s;
+              --duration: 6.53s;
+              width: 5.48px;
+              height: 5.48px;
+              background: radial-gradient(
+                circle,
+                rgba(128, 101, 255, 0.41),
+                transparent 65%
+              );
+            "
+          ></span>
+          <span
+            class="particle"
+            style="
+              --tx: -104px;
+              left: 72.77%;
+              bottom: -45px;
+              animation-delay: 6.34s;
+              --duration: 6.31s;
+              width: 4.98px;
+              height: 4.98px;
+              background: radial-gradient(
+                circle,
+                rgba(128, 101, 255, 0.4),
+                transparent 65%
+              );
+            "
+          ></span>
+          <span
+            class="particle"
+            style="
+              --tx: -8px;
+              left: 87.52%;
+              bottom: -45px;
+              animation-delay: 6.18s;
+              --duration: 8.87s;
+              width: 8.83px;
+              height: 8.83px;
+              background: radial-gradient(
+                circle,
+                rgba(128, 101, 255, 0.29),
+                transparent 65%
+              );
+            "
+          ></span>
+          <span
+            class="particle"
+            style="
+              --tx: 157px;
+              left: 2.37%;
+              bottom: -45px;
+              animation-delay: 2.3s;
+              --duration: 9.24s;
+              width: 5.1px;
+              height: 5.1px;
+              background: radial-gradient(
+                circle,
+                rgba(128, 101, 255, 0.57),
+                transparent 65%
+              );
+            "
+          ></span>
+          <span
+            class="particle"
+            style="
+              --tx: 158px;
+              left: 9.57%;
+              bottom: -45px;
+              animation-delay: 4.77s;
+              --duration: 7.7s;
+              width: 5.78px;
+              height: 5.78px;
+              background: radial-gradient(
+                circle,
+                rgba(128, 101, 255, 0.54),
+                transparent 65%
+              );
+            "
+          ></span>
+          <span
+            class="particle"
+            style="
+              --tx: -135px;
+              left: 107.83%;
+              bottom: -45px;
+              animation-delay: 2.6s;
+              --duration: 8.54s;
+              width: 6.88px;
+              height: 6.88px;
+              background: radial-gradient(
+                circle,
+                rgba(128, 101, 255, 0.5),
+                transparent 65%
+              );
+            "
+          ></span>
+        </div>
+        <div class="card-header">
+          <h1>Welcome Back</h1>
+          <p>Log in to access your personalized FlexFule dashboard.</p>
+        </div>
+        <form id="loginForm" class="form" action="#" method="post" novalidate>
+          <label class="field">
+            <span class="icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 4-8 5L4 8V6l8 5 8-5Z"
+                />
+              </svg>
+            </span>
+            <input
+              id="loginEmail"
+              type="email"
+              placeholder=" "
+              autocomplete="email"
+              required
+            />
+            <span class="label-text">Email</span>
+            <span class="error-message" aria-live="polite"></span>
+          </label>
+
+          <label class="field">
+            <span class="icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M17 9h-1V7a4 4 0 0 0-8 0v2H7a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2Zm-7-2a2 2 0 0 1 4 0v2H10Z"
+                />
+              </svg>
+            </span>
+            <input
+              id="loginPassword"
+              type="password"
+              placeholder=" "
+              autocomplete="current-password"
+              required
+            />
+            <span class="label-text">Password</span>
+            <span class="error-message" aria-live="polite"></span>
+          </label>
+
+          <div class="form-meta">
+            <p class="signup-hint">
+              New to FlexFule? <a href="signup.html">Register</a> here
+            </p>
+            <a href="#" class="forgot">Forgot Password?</a>
+          </div>
+
+          <button type="submit" class="primary">LOGIN</button>
+
+          <div class="or">Or</div>
+
+          <div class="social">
+            <button
+              type="button"
+              class="social-btn google"
+              data-oauth-provider="google"
+            >
+              <span class="g-icon" aria-hidden="true">
+                <svg viewBox="0 0 48 48">
+                  <path
+                    fill="#FFC107"
+                    d="M43.6 20.5H42V20H24v8h11.3C33.5 32.9 29.1 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.8 6 29.7 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.2-.1-2.3-.4-3.5z"
+                  />
+                  <path
+                    fill="#FF3D00"
+                    d="M6.3 14.7 12.9 19.5C14.7 15.1 19 12 24 12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.8 6 29.7 4 24 4 15.4 4 8 9.3 6.3 14.7z"
+                  />
+                  <path
+                    fill="#4CAF50"
+                    d="M24 44c5.1 0 9.8-2 13.2-5.2l-6.1-5c-2 1.4-4.5 2.2-7.1 2.2-5 0-9.3-3.1-10.9-7.4l-6.5 5.1C8 38.7 15.3 44 24 44z"
+                  />
+                  <path
+                    fill="#1976D2"
+                    d="M43.6 20.5H42V20H24v8h11.3c-1.3 3.3-4.6 6-9.3 6-5 0-9.3-3.1-10.9-7.4l-6.5 5.1C8 38.7 15.3 44 24 44c8.8 0 19-6.4 19-20 0-1.2-.1-2.3-.4-3.5z"
+                  />
+                </svg>
+              </span>
+              Continue with Google
+            </button>
+            <button
+              type="button"
+              class="social-btn facebook"
+              data-oauth-provider="facebook"
+            >
+              <span class="f-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="#1877F2">
+                  <path
+                    d="M22 12a10 10 0 1 0-11.6 9.9v-7h-2.3V12h2.3V9.8c0-2.2 1.3-3.5 3.4-3.5.98 0 2 .18 2 .18v2.2h-1.1c-1.1 0-1.4.68-1.4 1.4V12h2.4l-.39 2.9h-2v7A10 10 0 0 0 22 12"
+                  />
+                </svg>
+              </span>
+              Continue with Facebook
+            </button>
+          </div>
+        </form>
+        </section>
+      </section>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="supabase-browser.js"></script>
+    <script src="supabase-session.js"></script>
+    <script src="oauth-buttons.js"></script>
+    <script>
+      document.querySelectorAll("[data-oauth-provider]").forEach((button) => {
+        button.dataset.oauthRedirect = `${window.location.origin}/dashboard.html?from=oauth`;
+      });
+
+      const form = document.getElementById("loginForm");
+      if (form) {
+        const emailInput = document.getElementById("loginEmail");
+        const passwordInput = document.getElementById("loginPassword");
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        function fieldContainer(element) {
+          return element?.closest(".field");
+        }
+
+        function clearFieldError(element) {
+          const container = fieldContainer(element);
+          if (!container || !element) return;
+          container.classList.remove("error");
+          const message = container.querySelector(".error-message");
+          if (message) message.textContent = "";
+          element.removeAttribute("aria-invalid");
+        }
+
+        function showFieldError(element, message) {
+          const container = fieldContainer(element);
+          if (!container || !element) return;
+          container.classList.add("error");
+          const slot = container.querySelector(".error-message");
+          if (slot) slot.textContent = message;
+          element.setAttribute("aria-invalid", "true");
+        }
+
+        function clearAllErrors() {
+          form.querySelectorAll(".field.error").forEach((container) => {
+            container.classList.remove("error");
+            const message = container.querySelector(".error-message");
+            if (message) message.textContent = "";
+            const control = container.querySelector("input");
+            control?.removeAttribute("aria-invalid");
+          });
+        }
+
+        [emailInput, passwordInput].forEach((input) => {
+          input?.addEventListener("input", () => clearFieldError(input));
+        });
+
+        form.addEventListener("submit", async (event) => {
+          event.preventDefault();
+          clearAllErrors();
+
+          const email = emailInput?.value.trim() ?? "";
+          const password = passwordInput?.value ?? "";
+          let isValid = true;
+
+          if (!email) {
+            showFieldError(emailInput, "Email is required");
+            isValid = false;
+          } else if (!emailPattern.test(email)) {
+            showFieldError(emailInput, "Enter a valid email address");
+            isValid = false;
+          }
+
+          if (!password) {
+            showFieldError(passwordInput, "Password is required");
+            isValid = false;
+          }
+
+          if (!isValid) {
+            form.querySelector(".field.error input")?.focus();
+            return;
+          }
+
+          try {
+            const res = await fetch("/api/login", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ email, password }),
+            });
+
+            let payload = null;
+            try {
+              payload = await res.json();
+            } catch {
+              payload = null;
+            }
+
+            if (!res.ok) {
+              const messageSources = [
+                payload && typeof payload.error === "string"
+                  ? payload.error
+                  : "",
+                payload && typeof payload.message === "string"
+                  ? payload.message
+                  : "",
+              ];
+              const fallback = "Invalid email or password";
+              const serverMessage =
+                messageSources.map((msg) => msg.trim()).find(Boolean) ||
+                fallback;
+              throw new Error(serverMessage);
+            }
+
+            const needsHealthInfo = Boolean(payload?.needsHealthInfo);
+            window.location.href = needsHealthInfo
+              ? "health.html?from=login"
+              : "dashboard.html";
+          } catch (err) {
+            const message = err instanceof Error ? err.message.trim() : "";
+            const lowered = message.toLowerCase();
+
+            if (lowered.includes("email")) {
+              showFieldError(emailInput, message || "Invalid email");
+              clearFieldError(passwordInput);
+              emailInput?.focus();
+            } else if (lowered.includes("password")) {
+              showFieldError(passwordInput, message || "Incorrect password");
+              clearFieldError(emailInput);
+              passwordInput?.focus();
+            } else {
+              showFieldError(emailInput, message || "Login failed");
+              showFieldError(passwordInput, message || "Login failed");
+              form.querySelector(".field.error input")?.focus();
+            }
+          }
+        });
+      }
+    </script>
+    <script>
+      (function () {
+        const card = document.querySelector(".login-card");
+        if (!card) return;
+        const MAX_ROT = 6;
+        const reset = () => {
+          card.style.transition = "transform 320ms ease";
+          card.style.transform = "";
+          requestAnimationFrame(() => {
+            card.style.transition = "transform 80ms ease";
+          });
+        };
+        card.addEventListener("mousemove", (event) => {
+          const bounds = card.getBoundingClientRect();
+          const x = ((event.clientX - bounds.left) / bounds.width - 0.5) * 2;
+          const y = ((event.clientY - bounds.top) / bounds.height - 0.4) * 2;
+          card.style.transform = `rotateX(${(-y * MAX_ROT).toFixed(2)}deg) rotateY(${(x * MAX_ROT).toFixed(2)}deg)`;
+        });
+        card.addEventListener("mouseleave", reset);
+        reset();
+      })();
+    </script>
+  </body>
+</html>

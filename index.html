@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlexFule - Workout Interface</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="theme.css">
+    <script defer src="prompt.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="supabase-browser.js"></script>
+    <script src="supabase-session.js"></script>
+    <script defer src="plan-engine.js"></script>
+    <script defer src="streakTracker.js"></script>
+</head>
+
+<body class="app-shell">
+    <div class="sidebar">
+        <button class="sidebar-close" aria-label="Close sidebar">&#10005;</button>
+        <span class="header">
+            <img src="images/flexfuel.png" alt="FlexFule logo">
+            <h3>FlexFule</h3>
+        </span>
+        <a class="property" href="dashboard.html" data-icon-default="images/menu.png" data-icon-active="images/menu (2).png">
+            <img src="images/menu.png" alt="Dashboard">
+            <p>Dashboard</p>
+        </a>
+        <!-- <span class="property">
+            <img src="images/Group 8.png" alt="Summary">
+            <p>Summary</p>
+        </span> -->
+        <a class="property" href="index.html" data-icon-default="images/run.png" data-icon-active="images/run (2).png" aria-current="page">
+            <img src="images/run (2).png" alt="Workout">
+            <p class="active">Workout</p>
+        </a>
+        <a class="property" href="meals.html" data-icon-default="images/lunch (2).png" data-icon-active="images/lunch (3).png">
+            <img src="images/lunch (2).png" alt="Meals">
+            <p>Meals</p>
+        </a>
+        <span class="property">
+            <img src="images/flag (2).png" alt="Goals">
+            <p>Goals</p>
+        </span>
+        <a class="property" href="profile.html" data-icon-default="images/user.png" data-icon-active="images/user (1).png">
+            <img src="images/user.png" alt="Profile">
+            <p>Profile</p>
+        </a>
+        <span class="property">
+            <img src="images/settings (2).png" alt="Settings">
+            <p>Settings</p>
+        </span>
+        <span class="property">
+            <img src="images/logout.png" alt="Logout">
+            <p>Logout</p>
+        </span>
+    </div>
+
+        <div class="sections">
+            <div class="hamburger-menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <script>
+                (function () {
+                    try {
+                        var saved = localStorage.getItem('flexfule-sidebar-state');
+                        if (saved === 'collapsed') {
+                            var sidebarEl = document.querySelector('.sidebar');
+                            var sectionsEl = document.querySelector('.sections');
+                            var hamburgerEl = document.querySelector('.hamburger-menu');
+                            if (sidebarEl) sidebarEl.classList.add('collapsed');
+                            if (sectionsEl) sectionsEl.classList.add('collapsed');
+                            if (hamburgerEl) {
+                                hamburgerEl.classList.add('active');
+                                hamburgerEl.setAttribute('aria-expanded', 'false');
+                            }
+                            document.body.classList.add('sidebar-collapsed');
+                        }
+                    } catch (err) {
+                        console.warn('Failed to apply saved sidebar state', err);
+                    }
+                })();
+            </script>
+            <div class="theme-toggle">
+                <img src="images/icons/sun.svg" alt="Light mode" class="sun-icon">
+                <img src="images/icons/moon.svg" alt="Dark mode" class="moon-icon">
+                <div class="toggle-slider"></div>
+            </div>
+            <span class="search-bar">
+                <img src="images/search.png" alt="search">
+                <input type="text" placeholder="Search workouts" data-workout-search>
+                <div class="option option--view">
+                    <button class="active" data-view-filter="plan" type="button">Plan</button>
+                    <button data-view-filter="all" type="button">All</button>
+                     <button data-level-filter="beginner" type="button">Beginner</button>
+                    <button data-level-filter="intermediate" type="button">Intermediate</button>
+                    <button data-level-filter="advanced" type="button">Advance</button>
+                </div>
+            </span>
+            <section class="focus-hero" aria-label="Featured builder program">
+                <div class="hero-copy">
+                    <p class="eyebrow">Elite Builder Split</p>
+                    <h2>Structure every set with a pro coach.</h2>
+                    <p>Level up with progressive overload blocks, guided tempo cues, and real-time accountability from the FlexFule builder collective.</p>
+                    <!-- <div class="hero-actions">
+                        <button class="hero-cta" type="button" data-view-filter="plan">Start Builder Week</button>
+                        <button class="hero-ghost" type="button" data-add-workout>Customize Day</button>
+                    </div> -->
+                </div>
+                <div class="hero-visual">
+                    <img src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&amp;fit=crop&amp;w=1400&amp;q=80" alt="Strength coach guiding a compound lift" loading="lazy">
+                    <span class="hero-glow" aria-hidden="true"></span>
+                </div>
+            </section>
+            <div class="main-content">
+                <div class="chart">
+                    <p class="chart-title">Today's Workout</p>
+                    <p class="chart-subtitle" data-workout-date aria-live="polite">Loading date…</p>
+                    <div class="chart-list" data-workout-list>
+                        <p class="empty-message">Loading plan…</p>
+                    </div>
+                    <div class="chartButton">
+                        <button data-log-workout type="button">Log Completed</button>
+                        <button data-add-workout type="button">Add Exercise</button>
+                    </div>
+                    <p class="log-success-message" data-log-message hidden role="status" aria-live="polite">Today's workout completed!</p>
+                    <div class="workout-history-card">
+                        <p class="history-title">Recent Logs</p>
+                        <p class="history-subtitle">Track what you've finished.</p>
+                        <ul class="history-list" data-workout-history>
+                            <li class="history-empty">No workouts logged yet.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="main-workout-card">
+                    <div class="workout-video">
+                        <div class="workout-embed" data-main-media>
+                            <p class="empty-message">Select a workout to preview</p>
+                        </div>
+                    </div>
+                    <div class="workout-info">
+                        <h4 data-main-title>Loading…</h4>
+                        <div class="workout-meta">
+                            <span data-main-prescription></span>
+                            <span data-main-intensity></span>
+                            <span data-main-burn></span>
+                        </div>
+                        <button class="start-workout" data-main-watch type="button" hidden>Watch Video</button>
+                    </div>
+                </div>
+            </div>
+            <div class="workout-grid" data-workout-grid>
+                <p class="empty-message">Workouts will populate here once loaded.</p>
+            </div>
+        </div>
+    <script src="app.js"></script>
+
+</body>
+
+</html>

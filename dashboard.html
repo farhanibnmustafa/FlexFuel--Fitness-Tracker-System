@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FlexFule — Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="dashboard.css" />
+  <link rel="stylesheet" href="theme.css" />
+  <script defer src="prompt.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="supabase-browser.js"></script>
+  <script src="supabase-session.js"></script>
+  <script defer src="plan-engine.js"></script>
+  <script defer src="streakTracker.js"></script>
+  <script defer src="dashboard.js"></script>
+</head>
+
+<body class="app-shell">
+  <aside class="sidebar" aria-label="Primary">
+    <button class="sidebar-close" aria-label="Close sidebar">&#10005;</button>
+    <span class="header">
+      <img src="images/flexfuel.png" alt="FlexFule logo" />
+      <h3>FlexFule</h3>
+    </span>
+    <nav class="sidebar-nav">
+      <a class="property" href="dashboard.html" aria-current="page" data-icon-default="images/menu.png"
+        data-icon-active="images/menu (2).png">
+        <img src="images/menu (2).png" alt="Dashboard" />
+        <span class="label active">Dashboard</span>
+      </a>
+      <!-- <a class="property" href="#summary">
+        <img src="images/Group 8.png" alt="Summary" />
+        <span class="label">Summary</span>
+      </a> -->
+      <a class="property" href="index.html" data-icon-default="images/run.png" data-icon-active="images/run (2).png">
+        <img src="images/run.png" alt="Workout" />
+        <span class="label">Workout</span>
+      </a>
+      <a class="property" href="meals.html" data-icon-default="images/lunch (2).png" data-icon-active="images/lunch (3).png">
+      <img src="images/lunch (2).png" alt="Meals" />
+        <span class="label">Meals</span>
+      </a>
+      <a class="property" href="goals.html" data-icon-default="images/flag (1).png" data-icon-active="images/flag (2).png">
+        <img src="images/flag (1).png" alt="Goals" />
+        <span class="label">Goals</span>
+      </a>
+      <a class="property" href="profile.html" data-icon-default="images/user.png" data-icon-active="images/user (1).png">
+        <img src="images/user.png" alt="Profile" />
+        <span class="label">Profile</span>
+      </a>
+      <a class="property" href="#settings">
+        <img src="images/settings (2).png" alt="Settings" />
+        <span class="label">Settings</span>
+      </a>
+      <button class="property logout" id="logoutBtn" type="button">
+        <img src="images/logout.png" alt="Logout" />
+        <span class="label">Logout</span>
+      </button>
+    </nav>
+  </aside>
+
+  <div class="hamburger-menu" aria-label="Toggle sidebar" role="button" tabindex="0" aria-expanded="true">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+
+  <div class="sections">
+    <script>
+      (function () {
+        try {
+          var saved = localStorage.getItem('flexfule-sidebar-state');
+          if (saved === 'collapsed') {
+            var sidebarEl = document.querySelector('.sidebar');
+            var sectionsEl = document.querySelector('.sections');
+            var hamburgerEl = document.querySelector('.hamburger-menu');
+            if (sidebarEl) sidebarEl.classList.add('collapsed');
+            if (sectionsEl) sectionsEl.classList.add('collapsed');
+            if (hamburgerEl) {
+              hamburgerEl.classList.add('active');
+              hamburgerEl.setAttribute('aria-expanded', 'false');
+            }
+            document.body.classList.add('sidebar-collapsed');
+          }
+        } catch (err) {
+          console.warn('Failed to apply saved sidebar state', err);
+        }
+      })();
+    </script>
+    <div class="theme-toggle" aria-label="Toggle dark mode" role="button" tabindex="0" aria-pressed="false">
+      <img src="images/icons/sun.svg" alt="Light mode" class="sun-icon" />
+      <img src="images/icons/moon.svg" alt="Dark mode" class="moon-icon" />
+      <div class="toggle-slider"></div>
+    </div>
+
+    <main class="main-content">
+      <header class="topbar">
+        <h1 class="page-title">Dashboard</h1>
+        <div class="topbar-right">
+          <div class="user-meta" id="userMeta">
+            <img id="userAvatar" src="images/user.png" alt="User avatar" loading="lazy" data-avatar-placeholder="images/user.png" />
+            <div>
+              <span class="user-name" id="userName">FlexFule Member</span>
+              <span class="user-goal" id="userGoal">Goal: Stay consistent</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <section class="greeting">
+        <div class="greet-copy">
+          <h1 class="greeting-title" id="greetingTitle">
+            Welcome back, <span class="accent" id="greetingName">FlexFule Member</span>
+            <span class="wave" aria-hidden="true">👋</span>
+          </h1>
+          <p class="greeting-sub" id="greetingSub">You're one step closer to your goal today!</p>
+          <p class="greeting-date" id="greetingDate">Loading today's date…</p>
+        </div>
+        <div class="greeting-controls">
+          <div class="day-picker" role="tablist" aria-label="Select day">
+            <button class="day" type="button" data-index="0">Sunday</button>
+            <button class="day" type="button" data-index="1">Monday</button>
+            <button class="day" type="button" data-index="2">Tuesday</button>
+            <button class="day" type="button" data-index="3">Wednesday</button>
+            <button class="day" type="button" data-index="4">Thursday</button>
+            <button class="day" type="button" data-index="5">Friday</button>
+            <button class="day" type="button" data-index="6">Saturday</button>
+          </div>
+          <label class="date-selector">
+            <span class="sr-only">Select calendar date</span>
+            <input type="date" id="dashboardDatePicker" />
+          </label>
+        </div>
+      </section>
+
+      <section class="dashboard-grid">
+        <article class="card stats">
+          <h2>Today's Target</h2>
+          <ul class="target-list">
+            <li>
+              <span class="target-icon target-icon--calories" aria-hidden="true"></span>
+              <div class="target-meta">
+                <span class="target-label">Calories</span>
+                <strong id="targetCalories">400 kcal</strong>
+              </div>
+            </li>
+            <li>
+              <span class="target-icon target-icon--water" aria-hidden="true"></span>
+              <div class="target-meta">
+                <span class="target-label">Suggested Water Intake</span>
+                <strong id="targetWater">600 ml</strong>
+              </div>
+            </li>
+            <li>
+              <span class="target-icon target-icon--workout" aria-hidden="true"></span>
+              <div class="target-meta">
+                <span class="target-label">Workout</span>
+                <strong id="targetWorkout">45 mins</strong>
+              </div>
+            </li>
+          </ul>
+        </article>
+
+        <article class="card activity">
+          <header class="card-header">
+            <h2>Activity Overview</h2>
+          </header>
+          <div class="activity-body">
+            <div class="activity-visual">
+              <svg viewBox="0 0 120 120" class="ring" aria-hidden="true">
+                <circle class="track" cx="60" cy="60" r="52" />
+                <circle class="progress" cx="60" cy="60" r="52" stroke-dasharray="326" stroke-dashoffset="326" />
+              </svg>
+              <div class="activity-value">
+                <span id="activityPercent">0%</span>
+                <small>Complete</small>
+              </div>
+            </div>
+            <div class="activity-summary">
+              <span class="activity-label">Calories Burned</span>
+              <span class="activity-total" id="activitySummary">0 kcal</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="card streak" id="streakCard">
+          <header class="streak-header">
+            <div>
+              <h2>Consistency Streak</h2>
+              <p id="streakStatusMessage">Log today's workout and meals to start your streak.</p>
+            </div>
+            <span class="streak-level" id="streakLevelLabel">Getting Started</span>
+          </header>
+          <div class="streak-body">
+            <div class="streak-count">
+              <span class="streak-number" id="streakCurrent">0</span>
+              <span class="streak-label">day streak</span>
+            </div>
+            <div class="streak-meta">
+              <span>Best streak</span>
+              <strong id="streakBest">0 days</strong>
+              <span class="streak-total" id="streakTotal">0 total days logged</span>
+            </div>
+          </div>
+          <footer class="streak-history-wrap">
+            <p>Last 7 days</p>
+            <ul class="streak-history" id="streakHistory" aria-label="Recent streak activity"></ul>
+          </footer>
+        </article>
+
+        <article class="card meals" id="meals">
+          <header>
+            <h2>Meal Summary</h2>
+          </header>
+          <div class="meal-body">
+            <div class="meal-chart-wrap">
+              <svg class="meal-chart" viewBox="0 0 120 120">
+                <circle cx="60" cy="60" r="45" class="meal-track" fill="none"></circle>
+                <circle class="meal-segment" data-meal="breakfast" data-color="#22d3ee" cx="60" cy="60" r="45" stroke="#22d3ee"
+                  stroke-dasharray="98.9 282.6" stroke-dashoffset="0" fill="none"></circle>
+                <circle class="meal-segment" data-meal="lunch" data-color="#4cd964" cx="60" cy="60" r="45" stroke="#4cd964"
+                  stroke-dasharray="113.0 282.6" stroke-dashoffset="-98.9" fill="none"></circle>
+                <circle class="meal-segment" data-meal="snacks" data-color="#facc15" cx="60" cy="60" r="45" stroke="#facc15"
+                  stroke-dasharray="28.3 282.6" stroke-dashoffset="-211.9" fill="none"></circle>
+                <circle class="meal-segment" data-meal="dinner" data-color="#6366f1" cx="60" cy="60" r="45" stroke="#6366f1"
+                  stroke-dasharray="42.4 282.6" stroke-dashoffset="-240.2" fill="none"></circle>
+              </svg>
+              <span class="meal-hint"><span class="hint-dot"></span>Tap to see details</span>
+              <div class="meal-tooltip" id="mealTooltip" aria-hidden="true">
+                <h3 id="mealTooltipTitle">Meal</h3>
+                <p id="mealTooltipSummary">350 kcal (35% of daily goal)</p>
+                <ul>
+                  <li><span>Protein:</span><strong>25g (30%)</strong></li>
+                  <li><span>Carbs:</span><strong>55g (50%)</strong></li>
+                  <li><span>Fat:</span><strong>18g (20%)</strong></li>
+                </ul>
+              </div>
+            </div>
+            <ul class="meal-legend">
+              <li data-meal="breakfast" data-color="#22d3ee"><span class="legend-dot" style="background:#22d3ee"></span>
+                <div><strong>Breakfast</strong>
+                  <div>350 kcal (35%)</div>
+                </div>
+              </li>
+              <li data-meal="lunch" data-color="#4cd964"><span class="legend-dot" style="background:#4cd964"></span>
+                <div><strong>Lunch</strong>
+                  <div>600 kcal (40%)</div>
+                </div>
+              </li>
+              <li data-meal="snacks" data-color="#facc15"><span class="legend-dot" style="background:#facc15"></span>
+                <div><strong>Snacks</strong>
+                  <div>150 kcal (10%)</div>
+                </div>
+              </li>
+              <li data-meal="dinner" data-color="#6366f1"><span class="legend-dot" style="background:#6366f1"></span>
+                <div><strong>Dinner</strong>
+                  <div>500 kcal (15%)</div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="card goals" id="goals">
+          <header>
+            <h2>Weekly Goal Tracker</h2>
+            <span class="goal-week-range">Week overview</span>
+          </header>
+          <div class="goal-chart">
+          <ul class="goal-bars">
+            <li data-day="Sunday" data-minutes="0" data-status="Upcoming" style="--bar-height:0" tabindex="0"><span class="bar"></span><span class="goal-day">Sun</span></li>
+            <li data-day="Monday" data-minutes="0" data-status="Upcoming" style="--bar-height:0" tabindex="0"><span class="bar"></span><span class="goal-day">Mon</span></li>
+            <li data-day="Tuesday" data-minutes="0" data-status="Upcoming" style="--bar-height:0" tabindex="0"><span class="bar"></span><span class="goal-day">Tue</span></li>
+            <li data-day="Wednesday" data-minutes="0" data-status="Upcoming" style="--bar-height:0" tabindex="0"><span class="bar"></span><span class="goal-day">Wed</span></li>
+            <li data-day="Thursday" data-minutes="0" data-status="Upcoming" style="--bar-height:0" tabindex="0"><span class="bar"></span><span class="goal-day">Thu</span></li>
+            <li data-day="Friday" data-minutes="0" data-status="Upcoming" style="--bar-height:0" tabindex="0"><span class="bar"></span><span class="goal-day">Fri</span></li>
+            <li data-day="Saturday" data-minutes="0" data-status="Upcoming" style="--bar-height:0" tabindex="0"><span class="bar"></span><span class="goal-day">Sat</span></li>
+          </ul>
+          <div class="goal-tooltip" id="goalTooltip" aria-hidden="true">
+            <span class="goal-tooltip-day">Sunday</span>
+            <strong class="goal-tooltip-minutes">45 minutes</strong>
+            <p class="goal-tooltip-status">(61% off goal)</p>
+          </div>
+            <div class="goal-trend" aria-hidden="true">
+              <svg viewBox="0 0 300 80" preserveAspectRatio="none">
+                <defs>
+                  <linearGradient id="goalTrendGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="rgba(76,217,100,0.55)" />
+                    <stop offset="100%" stop-color="rgba(12,26,20,0)" />
+                  </linearGradient>
+                </defs>
+                <path class="goal-trend-area"
+                  d="M0 60 L40 50 L80 48 L120 40 L160 36 L200 28 L240 20 L280 12 L300 8 L300 80 L0 80 Z" />
+              </svg>
+            </div>
+          </div>
+          <div class="goal-progress">
+            <div class="goal-bar">
+              <div class="goal-fill" style="width: 0%"></div>
+            </div>
+            <div class="goal-meta">
+              <span>Current streak</span>
+              <strong id="goalStreak">0 days</strong>
+            </div>
+          </div>
+        </article>
+      </section>
+    </main>
+  </div>
+</body>
+
+</html>

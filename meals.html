@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FlexFule — Meals</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="dashboard.css" />
+  <link rel="stylesheet" href="meals.css" />
+  <link rel="stylesheet" href="theme.css" />
+  <script defer src="prompt.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="supabase-browser.js"></script>
+  <script src="supabase-session.js"></script>
+</head>
+
+<body class="app-shell">
+  <aside class="sidebar" aria-label="Primary">
+    <button class="sidebar-close" aria-label="Close sidebar">&#10005;</button>
+    <span class="header">
+      <img src="images/flexfuel.png" alt="FlexFule logo" />
+      <h3>FlexFule</h3>
+    </span>
+    <nav class="sidebar-nav">
+      <a class="property" href="dashboard.html" data-icon-default="images/menu.png"
+        data-icon-active="images/menu (2).png">
+        <img src="images/menu.png" alt="Dashboard" />
+        <span class="label">Dashboard</span>
+      </a>
+      <a class="property" href="index.html" data-icon-default="images/run.png"
+        data-icon-active="images/run (2).png">
+        <img src="images/run.png" alt="Workout" />
+        <span class="label">Workout</span>
+      </a>
+      <a class="property" href="meals.html" aria-current="page" data-icon-default="images/lunch (2).png"
+        data-icon-active="images/lunch (3).png">
+        <img src="images/lunch (2).png" alt="Meals" />
+        <span class="label active">Meals</span>
+      </a>
+      <a class="property" href="goals.html" data-icon-default="images/flag (1).png" data-icon-active="images/flag (2).png">
+        <img src="images/flag (2).png" alt="Goals" />
+        <span class="label">Goals</span>
+      </a>
+      <a class="property" href="profile.html" data-icon-default="images/user.png" data-icon-active="images/user (1).png">
+        <img src="images/user.png" alt="Profile" />
+        <span class="label">Profile</span>
+      </a>
+      <a class="property" href="#settings" data-icon-default="images/settings (2).png"
+        data-icon-active="images/settings.png">
+        <img src="images/settings (2).png" alt="Settings" />
+        <span class="label">Settings</span>
+      </a>
+      <button class="property logout" id="logoutBtn" type="button">
+        <img src="images/logout.png" alt="Logout" />
+        <span class="label">Logout</span>
+      </button>
+    </nav>
+  </aside>
+
+  <div class="hamburger-menu" aria-label="Toggle sidebar" role="button" tabindex="0" aria-expanded="true">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+  <div class="sections">
+    <script>
+      (function () {
+        try {
+          var saved = localStorage.getItem('flexfule-sidebar-state');
+          if (saved === 'collapsed') {
+            var sidebarEl = document.querySelector('.sidebar');
+            var sectionsEl = document.querySelector('.sections');
+            var hamburgerEl = document.querySelector('.hamburger-menu');
+            if (sidebarEl) sidebarEl.classList.add('collapsed');
+            if (sectionsEl) sectionsEl.classList.add('collapsed');
+            if (hamburgerEl) {
+              hamburgerEl.classList.add('active');
+              hamburgerEl.setAttribute('aria-expanded', 'false');
+            }
+            document.body.classList.add('sidebar-collapsed');
+          }
+        } catch (err) {
+          console.warn('Failed to apply saved sidebar state', err);
+        }
+      })();
+    </script>
+    <div class="theme-toggle" aria-label="Toggle dark mode" role="button" tabindex="0" aria-pressed="false">
+      <img src="images/icons/sun.svg" alt="Light mode" class="sun-icon" />
+      <img src="images/icons/moon.svg" alt="Dark mode" class="moon-icon" />
+      <div class="toggle-slider"></div>
+    </div>
+
+    <main class="main-content meals-page">
+      <header class="meals-topbar">
+        <div class="meals-title">
+          <h1>Daily Meal Plan</h1>
+          <p>Stay on track with balanced meals tailored for your day.</p>
+        </div>
+        <button class="log-meal-btn" type="button">+ Log Meal</button>
+      </header>
+
+      <section class="card meal-plan">
+        <div class="meal-plan-header">
+          <div>
+            <button class="plan-date" type="button" aria-haspopup="dialog" aria-expanded="false">
+              <span class="plan-date-label">Wednesday, 17th January</span>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M7 10l5 5 5-5z" fill="currentColor"></path>
+              </svg>
+            </button>
+            <!-- <h2>Daily Meal Plan</h2> -->
+            <p class="plan-subtitle">Suggested meals based on your goals</p>
+          </div>
+          <div class="plan-controls">
+            <button class="plan-export" type="button">Export</button>
+          </div>
+        </div>
+
+        <div class="meal-table-wrap">
+          <table class="meal-table">
+            <thead>
+              <tr>
+                <th>Meal Type</th>
+                <th>Suggested Foods</th>
+                <th>Quantity</th>
+                <th>Calories (kcal)</th>
+                <th>Protein (g)</th>
+                <th>Carbs (g)</th>
+                <th>Fat (g)</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Breakfast</td>
+                <td>Oats, banana, almond milk</td>
+                <td>50g oats, 1 banana, 200ml milk</td>
+                <td>400</td>
+                <td>12</td>
+                <td>55</td>
+                <td>8</td>
+                <td><button class="table-action" type="button" aria-label="Remove breakfast meal"></button></td>
+              </tr>
+              <tr>
+                <td>Lunch</td>
+                <td>Grilled chicken, rice</td>
+                <td>150g chicken, 100g rice</td>
+                <td>600</td>
+                <td>32</td>
+                <td>65</td>
+                <td>15</td>
+                <td><button class="table-action" type="button" aria-label="Remove lunch meal"></button></td>
+              </tr>
+              <tr>
+                <td>Dinner</td>
+                <td>Veg soup, salad</td>
+                <td>250ml soup, 80g salad</td>
+                <td>500</td>
+                <td>18</td>
+                <td>45</td>
+                <td>20</td>
+                <td><button class="table-action" type="button" aria-label="Remove dinner meal"></button></td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <th colspan="3">Total</th>
+                <th>1500</th>
+                <th>62</th>
+                <th>165</th>
+                <th>43</th>
+                <th></th>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+
+        <div class="plan-date-picker-backdrop" data-plan-date-picker hidden tabindex="-1">
+          <div class="plan-date-picker" role="dialog" aria-modal="true" aria-labelledby="planDatePickerTitle">
+            <header class="plan-date-picker-header">
+              <button class="picker-nav" type="button" data-calendar-prev aria-label="Previous month">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M15.7 5.3a1 1 0 0 1 0 1.4L11.41 11H19a1 1 0 1 1 0 2h-7.59l4.3 4.3a1 1 0 0 1-1.42 1.4l-6-6a1 1 0 0 1 0-1.4l6-6a1 1 0 0 1 1.42 0Z" fill="currentColor"></path>
+                </svg>
+              </button>
+              <div class="picker-month-label">
+                <h3 id="planDatePickerTitle">January 2024</h3>
+                <p data-calendar-subtitle>Choose a day to review your meal history.</p>
+              </div>
+              <button class="picker-nav" type="button" data-calendar-next aria-label="Next month">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M8.3 5.3a1 1 0 0 0 0 1.4L12.59 11H5a1 1 0 1 0 0 2h7.59l-4.3 4.3a1 1 0 0 0 1.42 1.4l6-6a1 1 0 0 0 0-1.4l-6-6a1 1 0 0 0-1.42 0Z" fill="currentColor"></path>
+                </svg>
+              </button>
+            </header>
+            <div class="plan-date-picker-grid">
+              <div class="picker-weekdays">
+                <span>Mo</span>
+                <span>Tu</span>
+                <span>We</span>
+                <span>Th</span>
+                <span>Fr</span>
+                <span>Sa</span>
+                <span>Su</span>
+              </div>
+              <div class="picker-days" data-calendar-days role="grid" aria-labelledby="planDatePickerTitle"></div>
+            </div>
+            <footer class="plan-date-picker-actions">
+              <button type="button" data-calendar-cancel>Cancel</button>
+              <button type="button" class="apply" data-calendar-apply disabled>Choose Date</button>
+            </footer>
+          </div>
+        </div>
+      </section>
+
+      <section class="meal-dashboard">
+        <article class="card calorie-card" data-target-calories="1500">
+          <div class="calorie-ring">
+            <svg viewBox="0 0 160 160" aria-hidden="true">
+              <circle class="ring-track" cx="80" cy="80" r="68"></circle>
+              <circle class="ring-progress" cx="80" cy="80" r="68"></circle>
+            </svg>
+            <div class="ring-content">
+              <span id="calorieValue">0</span>
+              <small>/1500 kcal</small>
+            </div>
+          </div>
+
+          <div class="calorie-meta">
+            <h3>Meals</h3>
+            <p class="calorie-plan-summary">
+              Planned intake:
+              <strong data-plan-calories>0 kcal</strong>
+            </p>
+            <ul class="calorie-list">
+              <li data-meal-item data-meal="Breakfast" data-calories="400" data-protein="12" data-carbs="55" data-fat="8">
+                <div class="meal-info">
+                  <span class="meal-name">Breakfast</span>
+                  <span class="meal-calories">400 kcal</span>
+                </div>
+                <button class="meal-check" data-meal-done type="button">Done</button>
+              </li>
+              <li data-meal-item data-meal="Lunch" data-calories="600" data-protein="32" data-carbs="65" data-fat="15">
+                <div class="meal-info">
+                  <span class="meal-name">Lunch</span>
+                  <span class="meal-calories">600 kcal</span>
+                </div>
+                <button class="meal-check" data-meal-done type="button">Done</button>
+              </li>
+              <li data-meal-item data-meal="Dinner" data-calories="500" data-protein="18" data-carbs="45" data-fat="20">
+                <div class="meal-info">
+                  <span class="meal-name">Dinner</span>
+                  <span class="meal-calories">500 kcal</span>
+                </div>
+                <button class="meal-check" data-meal-done type="button">Done</button>
+              </li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="card macro-card">
+          <h2>Macro Breakdown</h2>
+          <p class="macro-plan-summary" data-macro-summary>Protein 0g | Carbs 0g | Fat 0g</p>
+          <ul class="macro-bars">
+            <li data-macro-item="protein">
+              <div class="macro-meta">
+                <span>Protein</span>
+                <span class="macro-value"><span data-macro-consumed>0</span>g / <span data-macro-target>0</span>g</span>
+              </div>
+              <div class="macro-bar">
+                <div class="macro-fill"></div>
+              </div>
+            </li>
+            <li data-macro-item="fat">
+              <div class="macro-meta">
+                <span>Fats</span>
+                <span class="macro-value"><span data-macro-consumed>0</span>g / <span data-macro-target>0</span>g</span>
+              </div>
+              <div class="macro-bar">
+                <div class="macro-fill"></div>
+              </div>
+            </li>
+            <li data-macro-item="carbs">
+              <div class="macro-meta">
+                <span>Carbs</span>
+                <span class="macro-value"><span data-macro-consumed>0</span>g / <span data-macro-target>0</span>g</span>
+              </div>
+              <div class="macro-bar">
+                <div class="macro-fill"></div>
+              </div>
+            </li>
+          </ul>
+        </article>
+
+        <!-- <article class="card macro-trend">
+          <div class="macro-trend-header">
+            <h2>Macro Fulfillment Trend</h2>
+            <p>See how each completed meal contributes toward your daily macro goals.</p>
+          </div>
+          <div class="macro-trend-chart">
+            <canvas id="macroLineChart" role="img"
+              aria-label="Line chart showing macro fulfillment across meals"></canvas>
+            <p class="macro-trend-empty" hidden>Mark meals as done to see your macro progress.</p>
+          </div>
+          <ul class="macro-trend-legend">
+            <li data-macro-legend="protein"><span class="legend-swatch" aria-hidden="true"></span>Protein</li>
+            <li data-macro-legend="carbs"><span class="legend-swatch" aria-hidden="true"></span>Carbs</li>
+            <li data-macro-legend="fat"><span class="legend-swatch" aria-hidden="true"></span>Fat</li>
+          </ul>
+        </article> -->
+      </section>
+    </main>
+  </div>
+
+  <div class="meal-modal-backdrop" data-meal-modal-backdrop hidden>
+    <div class="meal-modal" data-meal-modal role="dialog" aria-modal="true" aria-labelledby="mealModalTitle">
+      <header class="meal-modal-header">
+        <div>
+          <h2 id="mealModalTitle">Add Meal</h2>
+          <p class="meal-modal-subtitle" data-meal-modal-subtitle>Swap a meal with a similar option.</p>
+        </div>
+        <button type="button" class="meal-modal-close" data-meal-modal-close aria-label="Close meal planner">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </header>
+
+      <div class="meal-modal-tabs" role="tablist">
+        <button type="button" class="meal-modal-tab is-active" data-meal-modal-tab="search" aria-selected="true">
+          Search
+        </button>
+        <button type="button" class="meal-modal-tab" data-meal-modal-tab="favorites" aria-selected="false">
+          Favourite
+        </button>
+      </div>
+
+      <div class="meal-modal-panels">
+        <section class="meal-modal-panel" data-meal-modal-panel="search" role="tabpanel">
+          <form class="meal-modal-form" data-meal-modal-form>
+            <label class="meal-modal-field">
+              <span>Meal Type</span>
+              <select data-meal-select="type" required>
+                <option value="" disabled selected>Select meal</option>
+              </select>
+            </label>
+
+            <label class="meal-modal-field">
+              <span>Macronutrient</span>
+              <select data-meal-select="macro" required disabled>
+                <option value="" disabled selected>Select focus</option>
+                <option value="protein">Protein</option>
+                <option value="carbs">Carbs</option>
+                <option value="fat">Fat</option>
+              </select>
+            </label>
+
+            <label class="meal-modal-field">
+              <span>Food Item</span>
+              <select data-meal-select="food" required disabled>
+                <option value="" disabled selected>Select item</option>
+              </select>
+            </label>
+
+            <article class="meal-modal-summary" data-meal-item-summary hidden>
+              <header>
+                <h3 data-meal-summary-title></h3>
+                <button type="button" class="meal-favorite-toggle" data-meal-favorite-toggle aria-label="Save to favourites">
+                  <span class="heart" aria-hidden="true">❤</span>
+                </button>
+              </header>
+              <p class="meal-modal-summary-meta" data-meal-summary-meta></p>
+              <ul class="meal-modal-macros" data-meal-summary-macros></ul>
+            </article>
+
+            <button type="submit" class="meal-modal-submit" data-meal-modal-submit disabled>Add to Plan</button>
+          </form>
+        </section>
+
+        <section class="meal-modal-panel" data-meal-modal-panel="favorites" role="tabpanel" hidden>
+          <div class="meal-modal-favorites" data-meal-favorites>
+            <p class="meal-modal-empty" data-meal-favorites-empty>No favourites yet. Save foods to reuse them quickly.</p>
+            <ul class="meal-modal-favorites-list" data-meal-favorites-list></ul>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <script defer src="plan-engine.js"></script>
+  <script defer src="streakTracker.js"></script>
+  <script defer src="app.js"></script>
+  <script defer src="meals.js"></script>
+</body>
+
+</html>

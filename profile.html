@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FlexFule — Profile</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="dashboard.css" />
+  <link rel="stylesheet" href="profile.css" />
+  <link rel="stylesheet" href="theme.css" />
+  <script defer src="prompt.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="supabase-browser.js"></script>
+  <script src="supabase-session.js"></script>
+  <script defer src="profile.js"></script>
+</head>
+
+<body class="app-shell">
+  <aside class="sidebar" aria-label="Primary">
+    <button class="sidebar-close" aria-label="Close sidebar">&#10005;</button>
+    <span class="header">
+      <img src="images/flexfuel.png" alt="FlexFule logo" />
+      <h3>FlexFule</h3>
+    </span>
+    <nav class="sidebar-nav">
+      <a class="property" href="dashboard.html" data-icon-default="images/menu.png" data-icon-active="images/menu (2).png">
+        <img src="images/menu.png" alt="Dashboard" />
+        <span class="label">Dashboard</span>
+      </a>
+      <a class="property" href="index.html" data-icon-default="images/run.png" data-icon-active="images/run (2).png">
+        <img src="images/run.png" alt="Workout" />
+        <span class="label">Workout</span>
+      </a>
+      <a class="property" href="meals.html" data-icon-default="images/lunch (2).png" data-icon-active="images/lunch (3).png">
+        <img src="images/lunch (2).png" alt="Meals" />
+        <span class="label">Meals</span>
+      </a>
+      <a class="property" href="goals.html" data-icon-default="images/flag (1).png" data-icon-active="images/flag (2).png">
+        <img src="images/flag (2).png" alt="Goals" />
+        <span class="label">Goals</span>
+      </a>
+      <a class="property" href="profile.html" aria-current="page" data-icon-default="images/user.png"
+        data-icon-active="images/user (1).png">
+        <img src="images/user (1).png" alt="Profile" />
+        <span class="label active">Profile</span>
+      </a>
+      <a class="property" href="#settings" data-icon-default="images/settings (2).png" data-icon-active="images/settings.png">
+        <img src="images/settings (2).png" alt="Settings" />
+        <span class="label">Settings</span>
+      </a>
+      <button class="property logout" id="logoutBtn" type="button">
+        <img src="images/logout.png" alt="Logout" />
+        <span class="label">Logout</span>
+      </button>
+    </nav>
+  </aside>
+
+  <div class="hamburger-menu" aria-label="Toggle sidebar" role="button" tabindex="0" aria-expanded="true">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+  <div class="sections">
+    <script>
+      (function () {
+        try {
+          var saved = localStorage.getItem('flexfule-sidebar-state');
+          if (saved === 'collapsed') {
+            var sidebarEl = document.querySelector('.sidebar');
+            var sectionsEl = document.querySelector('.sections');
+            var hamburgerEl = document.querySelector('.hamburger-menu');
+            if (sidebarEl) sidebarEl.classList.add('collapsed');
+            if (sectionsEl) sectionsEl.classList.add('collapsed');
+            if (hamburgerEl) {
+              hamburgerEl.classList.add('active');
+              hamburgerEl.setAttribute('aria-expanded', 'false');
+            }
+            document.body.classList.add('sidebar-collapsed');
+          }
+        } catch (err) {
+          console.warn('Failed to apply saved sidebar state', err);
+        }
+      })();
+    </script>
+    <div class="theme-toggle" aria-label="Toggle dark mode" role="button" tabindex="0" aria-pressed="false">
+      <img src="images/icons/sun.svg" alt="Light mode" class="sun-icon" />
+      <img src="images/icons/moon.svg" alt="Dark mode" class="moon-icon" />
+      <div class="toggle-slider"></div>
+    </div>
+
+    <main class="main-content profile-page">
+      <header class="profile-hero card">
+        <div class="profile-hero-left">
+          <div class="profile-avatar" data-profile-avatar>
+            <img src="images/user.png" alt="Profile avatar" loading="lazy" data-avatar-placeholder="images/user.png" />
+          </div>
+          <input type="file" accept="image/*" hidden aria-label="Upload profile photo" data-profile-avatar-input />
+          <div class="profile-ident">
+            <h1 data-profile-name>FlexFule Member</h1>
+            <p data-profile-email>@username</p>
+          </div>
+        </div>
+        <div class="profile-actions">
+          <button type="button" class="ghost-btn" data-profile-edit aria-pressed="false">Edit</button>
+          <button type="button" class="ghost-btn" data-profile-password>Change Password</button>
+        </div>
+      </header>
+
+      <nav class="profile-tabs" role="tablist" aria-label="Profile navigation">
+        <button class="profile-tab is-active" type="button" data-profile-tab="profile" aria-selected="true">Profile</button>
+        <button class="profile-tab" type="button" data-profile-tab="goals" aria-selected="false">Goals</button>
+        <button class="profile-tab" type="button" data-profile-tab="preferences" aria-selected="false">Preferences</button>
+        <button class="profile-tab" type="button" data-profile-tab="security" aria-selected="false">Security</button>
+      </nav>
+
+      <section class="profile-content" data-profile-panel="profile">
+        <form class="profile-form" data-profile-form novalidate>
+          <article class="profile-section">
+            <h2>Personal Details</h2>
+            <div class="profile-details-grid">
+              <label class="profile-field card">
+                <span class="field-label">Weight</span>
+                <div class="field-input">
+                  <input type="number" step="0.1" min="0" data-profile-input="weight_kg" disabled />
+                  <span class="unit">kg</span>
+                </div>
+              </label>
+              <label class="profile-field card">
+                <span class="field-label">Height</span>
+                <div class="field-input">
+                  <input type="number" step="0.1" min="0" data-profile-input="height_cm" disabled />
+                  <span class="unit">cm</span>
+                </div>
+              </label>
+              <label class="profile-field card">
+                <span class="field-label">Age</span>
+                <div class="field-input">
+                  <input type="number" step="1" min="0" data-profile-input="age" disabled />
+                  <span class="unit">years</span>
+                </div>
+              </label>
+              <label class="profile-field card">
+                <span class="field-label">Target Weight</span>
+                <div class="field-input">
+                  <input type="number" step="0.1" min="0" data-profile-input="target_weight" disabled />
+                  <span class="unit">kg</span>
+                </div>
+              </label>
+              <div class="profile-field card profile-field--readonly">
+                <span class="field-label">BMI</span>
+                <div class="field-input">
+                  <output data-profile-bmi>—</output>
+                </div>
+              </div>
+              <div class="profile-field card profile-field--readonly">
+                <span class="field-label">Activity Level</span>
+                <div class="field-input">
+                  <output data-profile-activity>Moderate</output>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="profile-section">
+            <h2>Your Goal</h2>
+            <div class="profile-goal-grid">
+              <div class="profile-goal-card card">
+                <h3>Goal Summary</h3>
+                <dl>
+                  <div>
+                    <dt>Goal Type</dt>
+                    <dd data-profile-goal>General fitness</dd>
+                  </div>
+                <div>
+                  <dt>Calorie Target</dt>
+                  <dd><span data-profile-calories>—</span> kcal</dd>
+                </div>
+                <div>
+                  <dt>Protein Target</dt>
+                  <dd><span data-profile-protein>—</span> g</dd>
+                </div>
+                <div>
+                  <dt>Target Weight</dt>
+                  <dd><span data-profile-target-weight>—</span> kg</dd>
+                </div>
+              </dl>
+            </div>
+
+              <div class="profile-goal-card card">
+                <h3>Macro Ratios</h3>
+                <ul class="macro-ratio-list" data-profile-macros>
+                  <li>
+                    <span>Protein</span>
+                    <div class="macro-bar">
+                      <div class="macro-fill" data-profile-macro="protein" style="width: 33%;"></div>
+                    </div>
+                    <span class="macro-percent" data-profile-macro-label="protein">33%</span>
+                  </li>
+                  <li>
+                    <span>Carbs</span>
+                    <div class="macro-bar">
+                      <div class="macro-fill" data-profile-macro="carbs" style="width: 40%;"></div>
+                    </div>
+                    <span class="macro-percent" data-profile-macro-label="carbs">40%</span>
+                  </li>
+                  <li>
+                    <span>Fat</span>
+                    <div class="macro-bar">
+                      <div class="macro-fill" data-profile-macro="fat" style="width: 27%;"></div>
+                    </div>
+                    <span class="macro-percent" data-profile-macro-label="fat">27%</span>
+                  </li>
+                </ul>
+              </div>
+
+            <div class="profile-goal-card card preferences-card">
+              <h3>Preferences</h3>
+              <label class="profile-preference-field">
+                <span>Dietary Preference</span>
+                <select data-profile-select="preference" disabled>
+                  <option value="">None</option>
+                  <option value="vegetarian">Vegetarian</option>
+                  <option value="vegan">Vegan</option>
+                  <option value="pescatarian">Pescatarian</option>
+                  <option value="halal">Halal</option>
+                  <option value="kosher">Kosher</option>
+                  <option value="gluten-free">Gluten-Free</option>
+                  <option value="dairy-free">Dairy-Free</option>
+                  <option value="other">Other</option>
+                </select>
+                <input type="text" data-profile-input="preference-other" placeholder="Specify other preference" disabled hidden />
+              </label>
+              <div class="profile-allergy-picker" data-profile-allergies>
+                <span class="picker-label">Allergies</span>
+                <div class="allergy-chip-list" data-allergy-list>
+                  <button type="button" class="allergy-chip" data-allergy-chip="Peanuts">Peanuts</button>
+                  <button type="button" class="allergy-chip" data-allergy-chip="Tree Nuts">Tree Nuts</button>
+                  <button type="button" class="allergy-chip" data-allergy-chip="Shellfish">Shellfish</button>
+                  <button type="button" class="allergy-chip" data-allergy-chip="Eggs">Eggs</button>
+                  <button type="button" class="allergy-chip" data-allergy-chip="Soy">Soy</button>
+                  <button type="button" class="allergy-chip" data-allergy-chip="Wheat">Wheat</button>
+                  <button type="button" class="allergy-chip" data-allergy-chip="Sesame">Sesame</button>
+                  <button type="button" class="allergy-chip" data-allergy-chip="Dairy">Dairy</button>
+                </div>
+                <div class="allergy-custom">
+                  <input type="text" data-allergy-custom placeholder="Add custom allergy" disabled />
+                  <button type="button" class="ghost-btn thin" data-allergy-add disabled>Add</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          </article>
+
+          <footer class="profile-actions-footer">
+            <span class="profile-feedback" data-profile-feedback role="status" aria-live="polite"></span>
+            <button type="button" class="ghost-btn" data-profile-cancel hidden>Cancel</button>
+            <button type="submit" class="primary-btn" data-profile-save disabled>Save</button>
+          </footer>
+        </form>
+      </section>
+
+      <section class="profile-content is-hidden" data-profile-panel="goals" aria-hidden="true">
+        <div class="empty-state card">
+          <h2>Goals</h2>
+          <p>Manage your short-term and long-term goals here. This section is coming soon.</p>
+        </div>
+      </section>
+
+      <section class="profile-content is-hidden" data-profile-panel="preferences" aria-hidden="true">
+        <div class="empty-state card">
+          <h2>Preferences</h2>
+          <p>Update dietary preferences, meal exclusions and notification choices.</p>
+        </div>
+      </section>
+
+      <section class="profile-content is-hidden" data-profile-panel="security" aria-hidden="true">
+        <div class="empty-state card">
+          <h2>Security</h2>
+          <p>Two-factor authentication, connected devices and session history will appear here.</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="password-modal-backdrop" data-password-modal hidden>
+    <div class="password-modal" role="dialog" aria-modal="true" aria-labelledby="passwordModalTitle">
+      <button type="button" class="password-modal-close" data-password-close aria-label="Close change password dialog">&times;</button>
+      <h2 id="passwordModalTitle">Change Password</h2>
+      <form data-password-form novalidate>
+        <label>
+          <span>Current Password</span>
+          <input type="password" data-password-current required autocomplete="current-password" />
+        </label>
+        <label>
+          <span>New Password</span>
+          <input type="password" data-password-new required minlength="8" autocomplete="new-password" />
+        </label>
+        <label>
+          <span>Confirm New Password</span>
+          <input type="password" data-password-confirm required minlength="8" autocomplete="new-password" />
+        </label>
+        <div class="password-feedback" data-password-feedback role="status" aria-live="polite"></div>
+        <div class="password-actions">
+          <button type="button" class="ghost-btn" data-password-close>Cancel</button>
+          <button type="submit" class="primary-btn">Update Password</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script defer src="plan-engine.js"></script>
+  <script defer src="app.js"></script>
+</body>
+
+</html>

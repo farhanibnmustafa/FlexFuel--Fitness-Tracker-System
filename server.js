@@ -2094,7 +2094,7 @@ app.post('/api/workouts/log', async (req, res) => {
 
 // Serve static files
 app.get('/', (_req, res) => {
-  res.sendFile(path.join(__dirname, 'welcome.html'));
+  res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 app.get('/supabase-config.js', (_req, res) => {

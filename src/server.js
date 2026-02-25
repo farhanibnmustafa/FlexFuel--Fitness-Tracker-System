@@ -11,14 +11,22 @@ import { startWeeklyReportMonitor } from './services/weeklyReportService.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-dotenv.config({ path: path.resolve(__dirname, '../.env') });
+// Try loading .env from multiple locations (local dev and sandbox runtime paths).
+const envCandidates = [
+  path.resolve(__dirname, '../.env'),
+  path.resolve(process.cwd(), '.env'),
+  '/vercel/share/v0-project/.env',
+];
+for (const p of envCandidates) {
+  const result = dotenv.config({ path: p });
+  if (!result.error) break;
+}
 
 const ROOT_DIR = path.resolve(__dirname, '..');
 const PUBLIC_DIR = path.join(ROOT_DIR, 'public');
 const VIEWS_DIR = path.join(ROOT_DIR, 'views');
 
 const app = express();
-const PORT = Number(process.env.APP_PORT || process.env.PORT) || 3000;
 
 app.use(express.json({ limit: '10mb' }));
 app.use(cookieParser());
@@ -50,17 +58,24 @@ app.get('/supabase-config.js', (_req, res) => {
 app.use(express.static(PUBLIC_DIR));
 app.use(express.static(VIEWS_DIR));
 
-const server = app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-  startInactivityMonitor();
-  startWeeklyReportMonitor();
-});
+// Retry on a higher port if preferred port is already occupied.
+function listen(port) {
+  const server = app.listen(port, () => {
+    console.log(`Server running on http://localhost:${port}`);
+    startInactivityMonitor();
+    startWeeklyReportMonitor();
+  });
 
-server.on('error', (err) => {
-  if (err.code === 'EADDRINUSE') {
-    console.error(`Port ${PORT} already in use. Kill the old process and retry.`);
-    process.exit(1);
-  } else {
-    throw err;
-  }
-});
+  server.on('error', (err) => {
+    if (err.code === 'EADDRINUSE') {
+      console.warn(`Port ${port} in use, trying ${port + 1}...`);
+      server.close();
+      listen(port + 1);
+    } else {
+      throw err;
+    }
+  });
+}
+
+const PORT = Number(process.env.APP_PORT || process.env.PORT) || 3000;
+listen(PORT);

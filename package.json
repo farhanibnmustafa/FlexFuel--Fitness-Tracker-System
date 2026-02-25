@@ -5,7 +5,9 @@
   "main": "src/server.js",
   "type": "module",
   "scripts": {
+    "prestart": "node scripts/kill-port.js 3000",
     "start": "node src/server.js",
+    "predev": "node scripts/kill-port.js 3000",
     "dev": "nodemon src/server.js",
     "build:css": "tailwindcss -i ./tailwind.css -o ./public/build/tailwind.css --minify"
   },

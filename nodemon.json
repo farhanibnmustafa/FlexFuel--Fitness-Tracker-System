@@ -1,0 +1,17 @@
+{
+  "watch": ["src"],
+  "ext": "js,json",
+  "ignore": ["src/public", "src/views"],
+  "env": {
+    "SUPABASE_URL": "https://cfiblaukeslitumlbpuh.supabase.co",
+    "SUPABASE_SERVICE_ROLE_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNmaWJsYXVrZXNsaXR1bWxicHVoIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MDU4NzMyMiwiZXhwIjoyMDc2MTYzMzIyfQ.GaAoWoTqPGtYzWZm3QFcvU0n7q5LIUTh8Copc0WCPlo",
+    "SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNmaWJsYXVrZXNsaXR1bWxicHVoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1ODczMjIsImV4cCI6MjA3NjE2MzMyMn0.01YiEamMRhIHjn1hbU_xDaDvgF_ScCZuOydvHawf6MY",
+    "SESSION_SECRET": "Build-Up-By-Farhan-Ibn-Mustafa",
+    "SMTP_HOST": "smtp.gmail.com",
+    "SMTP_PORT": "465",
+    "SMTP_SECURE": "true",
+    "SMTP_USER": "farhanibnmustafa@gmail.com",
+    "SMTP_PASS": "ixzosytoalowuxww",
+    "APP_PORT": "3000"
+  }
+}

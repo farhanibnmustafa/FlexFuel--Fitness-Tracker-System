@@ -1,7 +1,6 @@
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import mountApiRoutes from './routes/apiRoutes.js';
@@ -10,17 +9,6 @@ import { startWeeklyReportMonitor } from './services/weeklyReportService.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
-// Try loading .env from multiple locations (local dev and sandbox runtime paths).
-const envCandidates = [
-  path.resolve(__dirname, '../.env'),
-  path.resolve(process.cwd(), '.env'),
-  '/vercel/share/v0-project/.env',
-];
-for (const p of envCandidates) {
-  const result = dotenv.config({ path: p });
-  if (!result.error) break;
-}
 
 const ROOT_DIR = path.resolve(__dirname, '..');
 const PUBLIC_DIR = path.join(ROOT_DIR, 'public');

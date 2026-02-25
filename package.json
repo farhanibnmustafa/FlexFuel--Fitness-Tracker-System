@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "node src/server.js",
-    "dev": "nodemon --ignore 'public/' --ignore 'views/' --ignore '.env' src/server.js",
+    "dev": "nodemon src/server.js",
     "build:css": "tailwindcss -i ./tailwind.css -o ./public/build/tailwind.css --minify"
   },
   "dependencies": {

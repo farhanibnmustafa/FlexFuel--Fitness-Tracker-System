@@ -9,10 +9,9 @@ import mountApiRoutes from './routes/apiRoutes.js';
 import { startInactivityMonitor } from './services/accountAlertService.js';
 import { startWeeklyReportMonitor } from './services/weeklyReportService.js';
 
-dotenv.config();
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+dotenv.config({ path: path.resolve(__dirname, '../.env') });
 const ROOT_DIR = path.resolve(__dirname, '..');
 const PUBLIC_DIR = path.join(ROOT_DIR, 'public');
 const VIEWS_DIR = path.join(ROOT_DIR, 'views');

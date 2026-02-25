@@ -17,7 +17,7 @@ const PUBLIC_DIR = path.join(ROOT_DIR, 'public');
 const VIEWS_DIR = path.join(ROOT_DIR, 'views');
 
 const app = express();
-const PORT = Number(process.env.APP_PORT || process.env.PORT) || 3000;
+const PORT = Number(process.env.PORT || process.env.APP_PORT) || 3001;
 
 app.use(express.json({ limit: '10mb' }));
 app.use(cookieParser());

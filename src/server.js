@@ -11,13 +11,24 @@ import { startWeeklyReportMonitor } from './services/weeklyReportService.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-dotenv.config({ path: path.resolve(__dirname, '../.env') });
+
+// Try multiple .env locations (project root and CWD) to handle sandbox path differences.
+const envPaths = [
+  path.resolve(__dirname, '../.env'),
+  path.resolve(process.cwd(), '.env'),
+];
+for (const p of envPaths) {
+  const result = dotenv.config({ path: p });
+  if (!result.error) break;
+}
+
 const ROOT_DIR = path.resolve(__dirname, '..');
 const PUBLIC_DIR = path.join(ROOT_DIR, 'public');
 const VIEWS_DIR = path.join(ROOT_DIR, 'views');
 
 const app = express();
-const PORT = Number(process.env.PORT || process.env.APP_PORT) || 3001;
+// Prefer APP_PORT (set in .env to 3001) to avoid sandbox's occupied port 3000.
+const PORT = Number(process.env.APP_PORT || process.env.PORT) || 3001;
 
 app.use(express.json({ limit: '10mb' }));
 app.use(cookieParser());

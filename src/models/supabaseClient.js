@@ -3,11 +3,20 @@ import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
 import path from 'path';
 
-// Resolve .env relative to project root regardless of CWD.
-// ESM imports are hoisted, so this module runs before server.js body.
+// ESM imports are hoisted — this runs before server.js body.
+// Try multiple .env locations to handle both local dev and sandbox environments.
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-dotenv.config({ path: path.resolve(__dirname, '../../.env') });
+
+// Try: alongside package.json (../../ from src/models/), then CWD
+const envPaths = [
+  path.resolve(__dirname, '../../.env'),
+  path.resolve(process.cwd(), '.env'),
+];
+for (const p of envPaths) {
+  const result = dotenv.config({ path: p });
+  if (!result.error) break;
+}
 
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;

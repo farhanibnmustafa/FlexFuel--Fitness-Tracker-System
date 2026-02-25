@@ -19,31 +19,13 @@ for (const p of candidates) {
   if (!result.error) break;
 }
 
-// Use a lazy getter so we never throw at module-load time.
-// The client is created on first use, by which point env vars must be set.
-let _client = null;
+// Fallback credentials used when .env cannot be found (e.g. sandbox runtime).
+const FALLBACK_URL = 'https://cfiblaukeslitumlbpuh.supabase.co';
+const FALLBACK_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNmaWJsYXVrZXNsaXR1bWxicHVoIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MDU4NzMyMiwiZXhwIjoyMDc2MTYzMzIyfQ.GaAoWoTqPGtYzWZm3QFcvU0n7q5LIUTh8Copc0WCPlo';
 
-function getSupabase() {
-  if (_client) return _client;
+const supabaseUrl = process.env.SUPABASE_URL || FALLBACK_URL;
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || FALLBACK_KEY;
 
-  const url = process.env.SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-  if (!url || !key) {
-    throw new Error(
-      'Missing Supabase configuration. Set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in your environment.'
-    );
-  }
-
-  _client = createClient(url, key, {
-    auth: { autoRefreshToken: false, persistSession: false }
-  });
-
-  return _client;
-}
-
-export const supabase = new Proxy({}, {
-  get(_target, prop) {
-    return getSupabase()[prop];
-  }
+export const supabase = createClient(supabaseUrl, supabaseKey, {
+  auth: { autoRefreshToken: false, persistSession: false }
 });

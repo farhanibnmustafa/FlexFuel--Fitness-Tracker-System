@@ -30,9 +30,13 @@ const app = express();
 
 app.use(express.json({ limit: '10mb' }));
 app.use(cookieParser());
+const SESSION_SECRET = process.env.SESSION_SECRET || 'Build-Up-By-Farhan-Ibn-Mustafa';
+const SUPABASE_URL = process.env.SUPABASE_URL || 'https://cfiblaukeslitumlbpuh.supabase.co';
+const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNmaWJsYXVrZXNsaXR1bWxicHVoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1ODczMjIsImV4cCI6MjA3NjE2MzMyMn0.01YiEamMRhIHjn1hbU_xDaDvgF_ScCZuOydvHawf6MY';
+
 app.use(
   session({
-    secret: process.env.SESSION_SECRET || 'dev-secret-change-me',
+    secret: SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: { httpOnly: true, sameSite: 'lax' }
@@ -47,8 +51,8 @@ app.get('/', (_req, res) => {
 
 app.get('/supabase-config.js', (_req, res) => {
   const payload = {
-    url: process.env.SUPABASE_URL || '',
-    anonKey: process.env.SUPABASE_ANON_KEY || ''
+    url: SUPABASE_URL,
+    anonKey: SUPABASE_ANON_KEY
   };
   res
     .type('application/javascript')

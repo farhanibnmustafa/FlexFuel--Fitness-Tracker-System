@@ -1,6 +1,7 @@
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import net from 'net';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
@@ -49,22 +50,27 @@ app.get('/supabase-config.js', (_req, res) => {
 app.use(express.static(PUBLIC_DIR));
 app.use(express.static(VIEWS_DIR));
 
-function startServer(port) {
-  const server = app.listen(port, () => {
-    console.log(`Server running on http://localhost:${port}`);
-    startInactivityMonitor();
-    startWeeklyReportMonitor();
-  });
-
-  server.on('error', (err) => {
-    if (err.code === 'EADDRINUSE') {
-      console.warn(`Port ${port} in use, retrying on ${port + 1}...`);
-      server.close();
-      startServer(port + 1);
-    } else {
-      throw err;
-    }
+function getFreePort(preferred) {
+  return new Promise((resolve) => {
+    const tester = net.createServer();
+    tester.once('error', () => {
+      // preferred port is busy — ask OS for any free port
+      const fallback = net.createServer();
+      fallback.listen(0, () => {
+        const { port } = fallback.address();
+        fallback.close(() => resolve(port));
+      });
+    });
+    tester.once('listening', () => {
+      tester.close(() => resolve(preferred));
+    });
+    tester.listen(preferred);
   });
 }
 
-startServer(PORT);
+const freePort = await getFreePort(PORT);
+app.listen(freePort, () => {
+  console.log(`Server running on http://localhost:${freePort}`);
+  startInactivityMonitor();
+  startWeeklyReportMonitor();
+});

@@ -5,8 +5,8 @@
   "main": "src/server.js",
   "type": "module",
   "scripts": {
-    "start": "node src/server.js",
-    "dev": "nodemon src/server.js",
+    "start": "node --env-file=.env src/server.js 2>/dev/null || node src/server.js",
+    "dev": "nodemon --exec 'node --env-file=.env src/server.js 2>/dev/null || node src/server.js'",
     "build:css": "tailwindcss -i ./tailwind.css -o ./public/build/tailwind.css --minify"
   },
   "dependencies": {

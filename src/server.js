@@ -31,8 +31,6 @@ app.use(
 );
 
 mountApiRoutes(app);
-startInactivityMonitor();
-startWeeklyReportMonitor();
 
 app.get('/', (_req, res) => {
   res.sendFile(path.join(VIEWS_DIR, 'index.html'));
@@ -53,4 +51,6 @@ app.use(express.static(VIEWS_DIR));
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
+  startInactivityMonitor();
+  startWeeklyReportMonitor();
 });

@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FlexFule - Settings</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/dashboard.css" />
+  <link rel="stylesheet" href="/css/settings.css" />
+  <link rel="stylesheet" href="/css/theme.css" />
+  <script defer src="/js/prompt.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/supabase-config.js"></script>
+  <script src="/js/supabase-browser.js"></script>
+  <script src="/js/supabase-session.js"></script>
+  <script defer src="/js/logout.js"></script>
+  <script defer src="/js/settings.js?v=2026-02-10-01"></script>
+</head>
+
+<body class="app-shell">
+  <aside class="sidebar" aria-label="Primary">
+    <button class="sidebar-close" aria-label="Close sidebar">&#10005;</button>
+    <span class="header">
+      <img src="images/flexfuel.png" alt="FlexFule logo" />
+      <h3>FlexFule</h3>
+    </span>
+    <nav class="sidebar-nav">
+      <a class="property" href="dashboard.html" data-icon-default="images/menu.png" data-icon-active="images/menu (2).png">
+        <img src="images/menu.png" alt="Dashboard" />
+        <span class="label">Dashboard</span>
+      </a>
+      <a class="property" href="workout.html" data-icon-default="images/run.png" data-icon-active="images/run (2).png">
+        <img src="images/run.png" alt="Workout" />
+        <span class="label">Workout</span>
+      </a>
+      <a class="property" href="meals.html" data-icon-default="images/lunch (2).png" data-icon-active="images/lunch (3).png">
+        <img src="images/lunch (2).png" alt="Meals" />
+        <span class="label">Meals</span>
+      </a>
+      <a class="property" href="goals.html" data-icon-default="images/flag (2).png" data-icon-active="images/flag (1).png">
+        <img src="images/flag (2).png" alt="Goals" />
+        <span class="label">Goals</span>
+      </a>
+      <a class="property" href="profile.html" data-icon-default="images/user.png" data-icon-active="images/user (1).png">
+        <img src="images/user.png" alt="Profile" />
+        <span class="label">Profile</span>
+      </a>
+      <a class="property" href="settings.html" aria-current="page" data-icon-default="images/settings (2).png"
+        data-icon-active="images/settings.png">
+        <img src="images/settings.png" alt="Settings" />
+        <span class="label active">Settings</span>
+      </a>
+      <button class="property logout" id="logoutBtn" type="button">
+        <img src="images/logout.png" alt="Logout" />
+        <span class="label">Logout</span>
+      </button>
+    </nav>
+  </aside>
+
+  <div class="hamburger-menu" aria-label="Toggle sidebar" role="button" tabindex="0" aria-expanded="true">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+
+  <div class="sections">
+    <script>
+      (function () {
+        try {
+          var saved = localStorage.getItem('flexfule-sidebar-state');
+          if (saved === 'collapsed') {
+            var sidebarEl = document.querySelector('.sidebar');
+            var sectionsEl = document.querySelector('.sections');
+            var hamburgerEl = document.querySelector('.hamburger-menu');
+            if (sidebarEl) sidebarEl.classList.add('collapsed');
+            if (sectionsEl) sectionsEl.classList.add('collapsed');
+            if (hamburgerEl) {
+              hamburgerEl.classList.add('active');
+              hamburgerEl.setAttribute('aria-expanded', 'false');
+            }
+            document.body.classList.add('sidebar-collapsed');
+          }
+        } catch (err) {
+          console.warn('Failed to apply saved sidebar state', err);
+        }
+      })();
+    </script>
+    <div class="theme-toggle" aria-label="Toggle dark mode" role="button" tabindex="0" aria-pressed="false">
+      <img src="images/icons/sun.svg" alt="Light mode" class="sun-icon" />
+      <img src="images/icons/moon.svg" alt="Dark mode" class="moon-icon" />
+      <div class="toggle-slider"></div>
+    </div>
+
+    <main class="main-content settings-page">
+      <header class="settings-hero">
+        <div>
+          <h1>Settings</h1>
+          <p>Manage your account settings and preferences.</p>
+        </div>
+        <div class="settings-user-card-wrap">
+          <div
+            class="settings-user-card"
+            data-settings-notification-trigger
+            role="button"
+            tabindex="0"
+            aria-expanded="false"
+            aria-controls="settingsNotificationsPanel"
+          >
+            <img src="images/user.png" alt="User avatar" data-settings-avatar />
+            <div>
+              <strong data-settings-name>FlexFule Member</strong>
+              <span data-settings-goal>Goal, General fitness</span>
+            </div>
+            <span class="settings-user-badge" data-settings-notification-badge hidden>0</span>
+          </div>
+          <div
+            class="settings-user-notifications"
+            id="settingsNotificationsPanel"
+            data-settings-notifications
+            hidden
+          >
+            <div class="settings-user-notifications-header">
+              <strong>Notifications</strong>
+              <div class="settings-user-notifications-actions">
+                <span class="settings-user-notifications-count" data-settings-notification-count>0</span>
+                <button
+                  class="settings-user-notifications-close"
+                  type="button"
+                  aria-label="Close notifications"
+                  data-settings-notification-close
+                >
+                  &times;
+                </button>
+              </div>
+            </div>
+            <div class="settings-user-notifications-list" data-settings-notification-list></div>
+            <p class="settings-user-notifications-empty" data-settings-notification-empty>
+              No notifications yet.
+            </p>
+          </div>
+        </div>
+      </header>
+
+      <div class="settings-tabs" role="tablist" aria-label="Settings tabs">
+        <button class="settings-tab is-active" type="button" data-settings-tab="account" aria-selected="true">Account</button>
+        <button class="settings-tab" type="button" data-settings-tab="notifications" aria-selected="false">Notifications</button>
+      </div>
+
+      <section class="settings-panel" data-settings-panel="account">
+        <h2>Account Settings</h2>
+        <div class="settings-row">
+          <div class="settings-row-info">
+            <h3>Email</h3>
+            <p data-settings-email>loading@email.com</p>
+          </div>
+          <button class="settings-btn settings-btn--ghost" type="button" data-settings-email-edit>Edit</button>
+        </div>
+        <div class="settings-row">
+          <div class="settings-row-info">
+            <h3>Password</h3>
+            <p>********</p>
+          </div>
+          <button class="settings-btn settings-btn--ghost" type="button" data-settings-password>Change Password</button>
+        </div>
+        <div class="settings-row settings-row--stacked">
+          <div class="settings-row-info">
+            <h3>Connected Accounts</h3>
+            <p>Connect your Google or Apple account for quick login access.</p>
+          </div>
+          <div class="settings-account-list">
+            <div class="settings-account">
+              <div class="settings-account-info">
+                <span class="settings-account-icon settings-account-icon--google">G</span>
+                <span>Google</span>
+              </div>
+              <button class="settings-btn settings-btn--outline" type="button" data-settings-connect="google">Connect</button>
+            </div>
+            <div class="settings-account">
+              <div class="settings-account-info">
+                <span class="settings-account-icon settings-account-icon--facebook">f</span>
+                <span>Facebook</span>
+              </div>
+              <button class="settings-btn settings-btn--outline" type="button" data-settings-connect="facebook">Connect</button>
+            </div>
+            <div class="settings-account">
+              <div class="settings-account-info">
+                <span class="settings-account-icon settings-account-icon--apple">A</span>
+                <span>Apple</span>
+              </div>
+              <button class="settings-btn settings-btn--outline" type="button" data-settings-connect="apple">Connect</button>
+            </div>
+          </div>
+        </div>
+        <div class="settings-row settings-row--danger">
+          <div class="settings-row-info">
+            <h3>Delete Account</h3>
+            <p>Permanently delete your account and all associated data. This action cannot be undone.</p>
+          </div>
+          <button class="settings-btn settings-btn--danger" type="button" data-settings-delete>Delete Account</button>
+        </div>
+      </section>
+
+      <section class="settings-panel is-hidden" data-settings-panel="notifications">
+        <h2>Notifications</h2>
+        <div class="settings-notify-block">
+          <div class="settings-notify-card">
+            <header class="settings-notify-header">
+              <h3>In-App Notifications</h3>
+              <p>Get notified directly within the app for important updates and reminders.</p>
+            </header>
+            <div class="settings-notify-list">
+              <div class="settings-notify-item" data-notification-item>
+                <div class="settings-notify-icon settings-notify-icon--workout">W</div>
+                <div class="settings-notify-info">
+                  <h4>Workout Reminders</h4>
+                  <p>Sends a notification before your scheduled workout.</p>
+                </div>
+                <label class="settings-toggle">
+                  <input type="checkbox" checked data-notify-key="workout_reminders" />
+                  <span class="settings-toggle-slider"></span>
+                </label>
+              </div>
+              <div class="settings-notify-item" data-notification-item>
+                <div class="settings-notify-icon settings-notify-icon--milestone">G</div>
+                <div class="settings-notify-info">
+                  <h4>Goal Milestones</h4>
+                  <p>Celebrate when you achieve key milestones.</p>
+                </div>
+                <label class="settings-toggle">
+                  <input type="checkbox" checked data-notify-key="goal_milestones" />
+                  <span class="settings-toggle-slider"></span>
+                </label>
+              </div>
+              <div class="settings-notify-item" data-notification-item>
+                <div class="settings-notify-icon settings-notify-icon--missed">M</div>
+                <div class="settings-notify-info">
+                  <h4>Missed Workouts</h4>
+                  <p>Reminds you to stay on track if you miss a workout.</p>
+                </div>
+                <label class="settings-toggle">
+                  <input type="checkbox" checked data-notify-key="missed_workouts" />
+                  <span class="settings-toggle-slider"></span>
+                </label>
+              </div>
+              <div class="settings-notify-item" data-notification-item>
+                <div class="settings-notify-icon settings-notify-icon--meals">M</div>
+                <div class="settings-notify-info">
+                  <h4>Meal Plan Reminders</h4>
+                  <p>Pre-plan your meals for tomorrow based on your plan.</p>
+                </div>
+                <label class="settings-toggle">
+                  <input type="checkbox" checked data-notify-key="meal_plan_reminders" />
+                  <span class="settings-toggle-slider"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-notify-card">
+            <header class="settings-notify-header">
+              <h3>Email Notifications</h3>
+              <p>Receive important updates delivered to your inbox.</p>
+            </header>
+            <div class="settings-notify-list settings-notify-list--compact">
+              <div class="settings-notify-item settings-notify-item--compact" data-notification-item>
+                <div class="settings-notify-icon settings-notify-icon--email">E</div>
+                <div class="settings-notify-info">
+                  <h4>Weekly Progress Summary</h4>
+                  <p>Recap your weekly fitness progress.</p>
+                </div>
+                <label class="settings-toggle">
+                  <input type="checkbox" checked data-notify-key="weekly_progress_summary" />
+                  <span class="settings-toggle-slider"></span>
+                </label>
+              </div>
+              <div class="settings-notify-item settings-notify-item--compact" data-notification-item>
+                <div class="settings-notify-icon settings-notify-icon--achievement">A</div>
+                <div class="settings-notify-info">
+                  <h4>Goal Achievements</h4>
+                  <p>Celebrate your milestones.</p>
+                </div>
+                <label class="settings-toggle">
+                  <input type="checkbox" checked data-notify-key="goal_achievements" />
+                  <span class="settings-toggle-slider"></span>
+                </label>
+              </div>
+              <div class="settings-notify-item settings-notify-item--compact" data-notification-item>
+                <div class="settings-notify-icon settings-notify-icon--security">S</div>
+                <div class="settings-notify-info">
+                  <h4>Account Alerts</h4>
+                  <p>Inactivity alerts and account status updates.</p>
+                </div>
+                <label class="settings-toggle">
+                  <input type="checkbox" checked data-notify-key="account_security_alerts" />
+                  <span class="settings-toggle-slider"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="password-modal-backdrop" data-password-modal hidden>
+    <div class="password-modal" role="dialog" aria-modal="true" aria-labelledby="passwordModalTitle">
+      <button type="button" class="password-modal-close" data-password-close aria-label="Close change password dialog">&times;</button>
+      <h2 id="passwordModalTitle">Change Password</h2>
+      <form data-password-form novalidate>
+        <label>
+          Current password
+          <input type="password" data-password-current required autocomplete="current-password" />
+        </label>
+        <label>
+          New password
+          <input type="password" data-password-new required minlength="8" autocomplete="new-password" />
+        </label>
+        <label>
+          Confirm new password
+          <input type="password" data-password-confirm required minlength="8" autocomplete="new-password" />
+        </label>
+        <div class="password-feedback" data-password-feedback role="status" aria-live="polite"></div>
+        <div class="password-actions">
+          <button type="button" class="ghost-btn" data-password-close>Cancel</button>
+          <button type="submit" class="primary-btn">Update Password</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
+
+</html>

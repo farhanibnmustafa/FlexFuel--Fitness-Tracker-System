@@ -69,5 +69,5 @@ function listen(port) {
   });
 }
 
-const PORT = Number(process.env.APP_PORT || process.env.PORT) || 3000;
+const PORT = Number(process.env.APP_PORT || process.env.PORT) || 3001;
 listen(PORT);

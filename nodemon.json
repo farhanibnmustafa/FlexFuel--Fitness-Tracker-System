@@ -1,7 +1,12 @@
 {
-  "watch": ["src"],
+  "watch": [
+    "src"
+  ],
   "ext": "js,json",
-  "ignore": ["src/public", "src/views"],
+  "ignore": [
+    "src/public",
+    "src/views"
+  ],
   "env": {
     "SUPABASE_URL": "https://cfiblaukeslitumlbpuh.supabase.co",
     "SUPABASE_SERVICE_ROLE_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNmaWJsYXVrZXNsaXR1bWxicHVoIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MDU4NzMyMiwiZXhwIjoyMDc2MTYzMzIyfQ.GaAoWoTqPGtYzWZm3QFcvU0n7q5LIUTh8Copc0WCPlo",
@@ -12,6 +17,6 @@
     "SMTP_SECURE": "true",
     "SMTP_USER": "farhanibnmustafa@gmail.com",
     "SMTP_PASS": "ixzosytoalowuxww",
-    "APP_PORT": "3000"
+    "APP_PORT": "3001"
   }
 }

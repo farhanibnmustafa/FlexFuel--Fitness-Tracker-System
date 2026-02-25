@@ -146,7 +146,14 @@ export async function runInactivitySweep() {
 }
 
 export function startInactivityMonitor() {
-  if (String(process.env.DISABLE_INACTIVITY_JOBS || '').toLowerCase() === 'true') return;
+  if (String(process.env.DISABLE_INACTIVITY_JOBS || '').toLowerCase() === 'true') {
+    console.log('Inactivity monitor disabled via DISABLE_INACTIVITY_JOBS.');
+    return;
+  }
+  if (!process.env.SUPABASE_URL && !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    console.warn('Inactivity monitor skipped: Supabase env vars not set.');
+    return;
+  }
   const intervalHours = Number(process.env.INACTIVITY_SWEEP_HOURS || 12);
   runInactivitySweep();
   setInterval(runInactivitySweep, Math.max(1, intervalHours) * 60 * 60 * 1000);

@@ -69,5 +69,6 @@ function listen(port) {
   });
 }
 
-const PORT = Number(process.env.APP_PORT || process.env.PORT) || 3001;
+// Default to 3001 — port 3000 is occupied by the sandbox platform process.
+const PORT = Number(process.env.APP_PORT || process.env.PORT || 3001);
 listen(PORT);

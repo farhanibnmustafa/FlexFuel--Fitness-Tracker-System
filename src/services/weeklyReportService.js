@@ -442,7 +442,17 @@ export async function runWeeklyReportSweep() {
 }
 
 export function startWeeklyReportMonitor() {
-  if (String(process.env.DISABLE_WEEKLY_REPORT_JOBS || '').toLowerCase() === 'true') return;
+  if (
+    String(process.env.DISABLE_WEEKLY_REPORT_JOBS || '').toLowerCase() === 'true' ||
+    String(process.env.DISABLE_INACTIVITY_JOBS || '').toLowerCase() === 'true'
+  ) {
+    console.log('Weekly report monitor disabled via env flag.');
+    return;
+  }
+  if (!process.env.SUPABASE_URL && !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    console.warn('Weekly report monitor skipped: Supabase env vars not set.');
+    return;
+  }
   const intervalHours = Number(process.env.WEEKLY_REPORT_SWEEP_HOURS || 12);
   runWeeklyReportSweep();
   setInterval(runWeeklyReportSweep, Math.max(1, intervalHours) * 60 * 60 * 1000);

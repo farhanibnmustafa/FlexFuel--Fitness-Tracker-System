@@ -49,8 +49,22 @@ app.get('/supabase-config.js', (_req, res) => {
 app.use(express.static(PUBLIC_DIR));
 app.use(express.static(VIEWS_DIR));
 
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-  startInactivityMonitor();
-  startWeeklyReportMonitor();
-});
+function startServer(port) {
+  const server = app.listen(port, () => {
+    console.log(`Server running on http://localhost:${port}`);
+    startInactivityMonitor();
+    startWeeklyReportMonitor();
+  });
+
+  server.on('error', (err) => {
+    if (err.code === 'EADDRINUSE') {
+      console.warn(`Port ${port} in use, retrying on ${port + 1}...`);
+      server.close();
+      startServer(port + 1);
+    } else {
+      throw err;
+    }
+  });
+}
+
+startServer(PORT);

@@ -1,6 +1,7 @@
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import os from 'os';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
@@ -18,6 +19,20 @@ const VIEWS_DIR = path.join(ROOT_DIR, 'views');
 
 const app = express();
 const PORT = Number(process.env.APP_PORT || process.env.PORT) || 3000;
+const HOST = process.env.APP_HOST || '0.0.0.0';
+
+const getNetworkUrls = (port) => {
+  const interfaces = os.networkInterfaces();
+  const urls = [];
+  Object.values(interfaces).forEach((records) => {
+    (records || []).forEach((entry) => {
+      if (!entry || entry.internal) return;
+      if (entry.family !== 'IPv4') return;
+      urls.push(`http://${entry.address}:${port}`);
+    });
+  });
+  return Array.from(new Set(urls));
+};
 
 app.use(express.json({ limit: '10mb' }));
 app.use(cookieParser());
@@ -48,9 +63,22 @@ app.get('/supabase-config.js', (_req, res) => {
     .send(`window.__SUPABASE_CONFIG__ = ${JSON.stringify(payload)};`);
 });
 
+app.get('/privacy', (_req, res) => {
+  res.sendFile(path.join(VIEWS_DIR, 'privacy.html'));
+});
+
+app.get('/data-deletion', (_req, res) => {
+  res.sendFile(path.join(VIEWS_DIR, 'data-deletion.html'));
+});
+
 app.use(express.static(PUBLIC_DIR));
 app.use(express.static(VIEWS_DIR));
 
-app.listen(PORT, () => {
+app.listen(PORT, HOST, () => {
   console.log(`Server running on http://localhost:${PORT}`);
+  const networkUrls = getNetworkUrls(PORT);
+  if (networkUrls.length) {
+    console.log('Network URLs:');
+    networkUrls.forEach((url) => console.log(`  - ${url}`));
+  }
 });

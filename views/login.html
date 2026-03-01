@@ -616,10 +616,10 @@
     <script src="/supabase-config.js"></script>
     <script src="/js/supabase-browser.js"></script>
     <script src="/js/supabase-session.js"></script>
-    <script src="/js/oauth-buttons.js"></script>
+    <script src="/js/oauth-buttons.js?v=2026-03-01-01"></script>
     <script>
       document.querySelectorAll("[data-oauth-provider]").forEach((button) => {
-        button.dataset.oauthRedirect = `${window.location.origin}/dashboard.html?from=oauth`;
+        button.dataset.oauthRedirect = `${window.location.origin}/health.html?from=login`;
       });
 
       const form = document.getElementById("loginForm");
@@ -934,6 +934,14 @@
       (function () {
         const card = document.querySelector(".login-card");
         if (!card) return;
+        const shouldDisableTilt = window.matchMedia(
+          "(max-width: 900px), (pointer: coarse), (prefers-reduced-motion: reduce)"
+        ).matches;
+        if (shouldDisableTilt) {
+          card.style.transform = "none";
+          card.style.transition = "";
+          return;
+        }
         const MAX_ROT = 6;
         const reset = () => {
           card.style.transition = "transform 320ms ease";
